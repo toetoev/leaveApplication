@@ -23,7 +23,7 @@ public class Compensation {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private Long id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
