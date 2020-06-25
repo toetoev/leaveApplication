@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import com.example.springbootsecurity.exception.AppException;
 import com.example.springbootsecurity.model.Role;
-import com.example.springbootsecurity.model.RoleName;
 import com.example.springbootsecurity.model.User;
 import com.example.springbootsecurity.payload.ApiResponse;
 import com.example.springbootsecurity.payload.JwtAuthenticationResponse;
@@ -75,12 +74,13 @@ public class AuthController {
                 }
 
                 // Creating user's account
+
                 User user = new User(null, signUpRequest.getName(), signUpRequest.getUsername(),
                                 signUpRequest.getEmail(), signUpRequest.getPassword(), null);
 
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-                Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+                Role userRole = roleRepository.findByName(signUpRequest.getRole())
                                 .orElseThrow(() -> new AppException("User Role not set."));
 
                 user.setRoles(Collections.singleton(userRole));
