@@ -17,8 +17,17 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "leaves")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Leave {
     @Id
     @GeneratedValue(generator = "uuid")
