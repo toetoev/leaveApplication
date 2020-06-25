@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -17,6 +16,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +32,8 @@ import lombok.Setter;
 @Setter
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private Long id;
 
     @NotBlank

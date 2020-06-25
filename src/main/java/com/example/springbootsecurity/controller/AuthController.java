@@ -87,6 +87,7 @@ public class AuthController {
 
                 User result = userRepository.save(user);
 
+                // TODO: understand uri parameters, maybe need to change some of it
                 URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
                                 .buildAndExpand(result.getUsername()).toUri();
 
