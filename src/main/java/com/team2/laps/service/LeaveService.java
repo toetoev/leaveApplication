@@ -3,6 +3,7 @@ package com.team2.laps.service;
 import java.util.List;
 
 import com.team2.laps.model.Leave;
+import com.team2.laps.model.TimePeriod;
 import com.team2.laps.model.User;
 import com.team2.laps.repository.LeaveRepository;
 import com.team2.laps.repository.UserRepository;
@@ -24,10 +25,26 @@ public class LeaveService {
     @Autowired
     UserRepository userRepository;
 
-    public List<Leave> getLeaveByUser() {
+    public List<Leave> getLeaveByUser(TimePeriod timePeriod, String leaveId) {
+        // Get current logged in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName()).get();
-        return leaveRepository.findByUser(user);
+
+        // if (user.getRoles().contains(new Role(RoleName.ROLE_MANAGER)))
+        // if (timePeriod == TimePeriod.FROM_NOW_ON) {
+        // logger.error("FROM NOW ON");
+        // return
+        // leaveRepository.findBySubordinatesAfterNowOrderByStartDate(user.getId());
+        // }
+        // else if (timePeriod == TimePeriod.LEAVE_PERIOD) {
+        // Leave leave = leaveRepository.findById(leaveId).get();
+        // return
+        // leaveRepository.findBySubordinatesWithTimePeriodOrderByStartDate(leave.getStartDate(),
+        // leave.getEndDate());
+        // } else if (timePeriod == TimePeriod.HISTORY) {
+        // return leaveRepository.findAllBySubordinates();
+        // }
+        return leaveRepository.findByUserOrderByStartDate(user.getId());
     }
 
     public boolean createOrUpdateLeave(Leave leave) {

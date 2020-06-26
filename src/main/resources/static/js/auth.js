@@ -1,7 +1,7 @@
 $("#formSignIn").submit(function (e) {
 	e.preventDefault();
-	var usernameOrEmail = $("input[name=usernameOrEmail").val();
-	var password = $("input[name=password").val();
+	var usernameOrEmail = $("input[name=usernameOrEmail]").val();
+	var password = $("input[name=password]").val();
 	$.ajax({
 		type: "POST",
 		url: "/api/auth/signin",
@@ -13,10 +13,10 @@ $("#formSignIn").submit(function (e) {
 		contentType: "application/json",
 		success: function (res) {
 			localStorage.setItem("accessToken", res.accessToken);
-			window.location = "/dashboard";
+			window.location = "/view/dashboard";
 		},
 		error: function (res) {
-			window.location = "/auth";
+			window.location = "/view/auth";
 		},
 	});
 });

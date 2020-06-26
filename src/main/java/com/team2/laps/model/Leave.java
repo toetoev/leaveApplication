@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,8 +43,10 @@ public class Leave {
     @Enumerated
     private LeaveType leaveType;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd.HH")
     private Date startDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd.HH")
     private Date endDate;
 
     private String reason;
@@ -54,4 +57,6 @@ public class Leave {
 
     @Enumerated
     private LeaveStatus status;
+
+    private String rejectReason;
 }
