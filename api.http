@@ -17,3 +17,20 @@ Content-Type: application/json
     "usernameOrEmail": "Martini",
     "password": "123456"
 }
+
+###
+GET http://localhost:5000/api/leave
+Content-Type: 'application/json',
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkzMTY0MTY5LCJleHAiOjE1OTM3Njg5Njl9.AaRBtZRAWjylHEFRTlxmV7UcMZ95ZJlH0MSYLJtgmmNN-7DUTLKHr3Z-vp6inUaw0YJI_eyNO_JpPPe4CFj02g
+
+###
+POST http://localhost:5000/api/leave
+Content-Type: 'application/json',
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkzMTY0MTY5LCJleHAiOjE1OTM3Njg5Njl9.AaRBtZRAWjylHEFRTlxmV7UcMZ95ZJlH0MSYLJtgmmNN-7DUTLKHr3Z-vp6inUaw0YJI_eyNO_JpPPe4CFj02g,
+
+{
+    "leaveType": "ANNUAL",
+    "startDate": "2020-06-26",
+    "endDate": "2020-06-27",
+    "status": "APPLIED"
+}
