@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -41,12 +40,11 @@ public class Leave {
     private User user;
 
     @Enumerated
-    @NotBlank
     private LeaveType leaveType;
 
-    private Date start_date;
+    private Date startDate;
 
-    private Date end_date;
+    private Date endDate;
 
     private String reason;
 
