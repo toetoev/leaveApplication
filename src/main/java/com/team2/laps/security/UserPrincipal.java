@@ -20,7 +20,7 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class UserPrincipal implements UserDetails {
 
-    private String id;
+    private Long id;
     private String name;
     private String username;
 
