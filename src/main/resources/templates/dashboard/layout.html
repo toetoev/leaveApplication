@@ -6,7 +6,10 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
+		<link rel="stylesheet" th:href="@{/css/all.min.css}" />
 		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+		<link rel="stylesheet" th:href="@{/css/mdb.min.css}" />
+		<link rel="stylesheet" th:href="@{/css/style.css}" />
 		<link rel="stylesheet" th:href="@{/css/dashboard.css}" />
 	</head>
 
@@ -37,6 +40,13 @@
 				<main layout:fragment="main"></main>
 			</div>
 		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/popper.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script
+			th:src="@{/js/all.min.js}"
+			data-auto-replace-svg="nest"
+		></script>
 		<div layout:fragment="script"></div>
 	</body>
 </html>
