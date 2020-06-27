@@ -13,7 +13,18 @@ $("#formSignIn").submit(function (e) {
 		contentType: "application/json",
 		success: function (res) {
 			localStorage.setItem("accessToken", res.accessToken);
-			window.location = "/view/dashboard";
+			switch (res.roleName) {
+				case "ROLE_MANAGER":
+					window.location = "/view/dashboard";
+					break;
+				case "ROLE_ADMINISTRATIVE_STAFF":
+				case "ROLE_PROFESSIONAL_STAFF":
+					window.location = "/view/staff/leave";
+					break;
+				case "ROLE_ADMIN":
+					window.location = "/view/dashboard";
+					break;
+			}
 		},
 		error: function (res) {
 			window.location = "/view/auth";

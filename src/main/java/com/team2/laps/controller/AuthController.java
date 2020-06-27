@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.team2.laps.exception.AppException;
 import com.team2.laps.model.Role;
+import com.team2.laps.model.RoleName;
 import com.team2.laps.model.User;
 import com.team2.laps.payload.ApiResponse;
 import com.team2.laps.payload.JwtAuthenticationResponse;
@@ -55,7 +56,9 @@ public class AuthController {
                                                 loginRequest.getPassword()));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 String jwt = tokenProvider.generateToken(authentication);
-                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+                RoleName roleName = userRepository.findById(tokenProvider.getUserIdFromJWT(jwt)).get().getRoles().get(0)
+                                .getName();
+                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, roleName));
         }
 
         @PostMapping("/signup")
@@ -74,7 +77,7 @@ public class AuthController {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 Role userRole = roleRepository.findByName(signUpRequest.getRole())
                                 .orElseThrow(() -> new AppException("User Role not set."));
-                user.setRoles(Collections.singleton(userRole));
+                user.setRoles(Collections.singletonList(userRole));
                 User result = userRepository.save(user);
                 // TODO: understand uri parameters, maybe need to change some of it
                 URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
