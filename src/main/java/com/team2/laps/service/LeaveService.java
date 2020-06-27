@@ -1,8 +1,11 @@
 package com.team2.laps.service;
 
+import java.time.Duration;
 import java.util.List;
 
 import com.team2.laps.model.Leave;
+import com.team2.laps.model.LeaveStatus;
+import com.team2.laps.model.LeaveType;
 import com.team2.laps.model.TimePeriod;
 import com.team2.laps.model.User;
 import com.team2.laps.repository.LeaveRepository;
@@ -24,6 +27,9 @@ public class LeaveService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
 
     public List<Leave> getLeaveByUser(TimePeriod timePeriod, String leaveId) {
         // Get current logged in user
@@ -47,18 +53,62 @@ public class LeaveService {
         return leaveRepository.findByUserOrderByStartDate(user.getId());
     }
 
-    public boolean createOrUpdateLeave(Leave leave) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName()).get();
-        leave.setUser(user);
-        if (leaveRepository.save(leave) != null)
-            return true;
-        else
-            return false;
+    public boolean createOrUpdateLeave(Leave leave, boolean isManager) {
+        if (isValid(leave, isManager)) {
+            if (leaveRepository.save(leave) != null)
+                return true;
+            else
+                return false;
+        }
+        return false;
     }
 
     public void deleteLeave(String leaveId) {
         logger.error(leaveId);
         leaveRepository.deleteById(leaveId);
+    }
+
+    public boolean isValid(Leave leave, boolean isManager) {
+        // Validate claim date
+        if (leave.getStartDate().compareTo(leave.getEndDate()) >= 0)
+            return false;
+        // Validate left time for leave
+        if (leave.getLeaveType() == LeaveType.ANNUAL) {
+            Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
+            if (duration.toDays() > leave.getUser().getAnnualLeaveLeft())
+                return false;
+        } else if (leave.getLeaveType() == LeaveType.MEDICAL) {
+            Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
+            if (duration.toDays() > leave.getUser().getMedicalLeaveLeft())
+                return false;
+        }
+        // Validate rejected reason
+        if (leave.getStatus() == LeaveStatus.REJECTED && leave.getRejectReason() == null)
+            return false;
+        // Validate status change
+        if (leave.getId() != null) {
+            boolean isStatusChangeValid = false;
+            Leave oldLeave = leaveRepository.findById(leave.getId()).get();
+            if (isManager) {
+                if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
+                        && (leave.getStatus() == LeaveStatus.APPROVED || leave.getStatus() == LeaveStatus.REJECTED))
+                    isStatusChangeValid = true;
+                else
+                    isStatusChangeValid = false;
+            } else {
+                if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
+                        && leave.getStatus() == LeaveStatus.DELETED)
+                    isStatusChangeValid = true;
+                else if (oldLeave.getStatus() == LeaveStatus.APPLIED && leave.getStatus() == LeaveStatus.UPDATED)
+                    isStatusChangeValid = true;
+                else if (oldLeave.getStatus() == LeaveStatus.APPROVED && leave.getStatus() == LeaveStatus.CANCELED)
+                    isStatusChangeValid = true;
+                else
+                    isStatusChangeValid = false;
+            }
+            if (!isStatusChangeValid)
+                return false;
+        }
+        return true;
     }
 }

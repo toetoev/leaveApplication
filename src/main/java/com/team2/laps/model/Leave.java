@@ -1,6 +1,6 @@
 package com.team2.laps.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,11 +42,11 @@ public class Leave {
     @Enumerated
     private LeaveType leaveType;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd.HH")
-    private Date startDate;
+    // @DateTimeFormat(pattern = "yyyy-MM-dd.HH")
+    private LocalDateTime startDate;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd.HH")
-    private Date endDate;
+    // @DateTimeFormat(pattern = "yyyy-MM-dd.HH")
+    private LocalDateTime endDate;
 
     private String reason;
 
