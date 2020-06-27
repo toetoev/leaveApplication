@@ -8,9 +8,9 @@
 		/>
 		<link rel="stylesheet" th:href="@{/css/all.min.css}" />
 		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-		<link rel="stylesheet" th:href="@{/css/mdb.min.css}" />
-		<link rel="stylesheet" th:href="@{/css/style.css}" />
+		<link rel="stylesheet" th:href="@{/css/datatables.min.css}" />
 		<link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+		<script src="https://kit.fontawesome.com/0f837020e1.js"></script>
 	</head>
 
 	<body>
@@ -40,12 +40,15 @@
 				<main layout:fragment="main"></main>
 			</div>
 		</div>
+
 		<script th:src="@{/js/jquery.min.js}"></script>
-		<script th:src="@{/js/popper.min.js}"></script>
 		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/datatables.min.js}"></script>
 		<script
-			th:src="@{/js/all.min.js}"
-			data-auto-replace-svg="nest"
+			th:src="@{//cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js}"
+		></script>
+		<script
+			th:src="@{//cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js}"
 		></script>
 		<div layout:fragment="script"></div>
 	</body>

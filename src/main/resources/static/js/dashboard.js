@@ -1,49 +1,61 @@
-/* globals Chart:false, feather:false */
+function Employee(name, position, salary, office) {
+	this.name = name;
+	this.position = position;
+	this.salary = salary;
+	this._office = office;
 
-(function () {
-	"use strict";
+	this.office = function () {
+		return this._office;
+	};
+}
 
-	feather.replace();
-
-	// Graphs
-	var ctx = document.getElementById("myChart");
-	// eslint-disable-next-line no-unused-vars
-	var myChart = new Chart(ctx, {
-		type: "line",
-		data: {
-			labels: [
-				"Sunday",
-				"Monday",
-				"Tuesday",
-				"Wednesday",
-				"Thursday",
-				"Friday",
-				"Saturday",
-			],
-			datasets: [
+$(document).ready(function () {
+	if (localStorage.getItem("accessToken")) {
+		$("#leave-table").DataTable({
+			ajax: {
+				type: "GET",
+				url: "http://localhost:5000/api/leaves",
+				headers: {
+					Authorization:
+						"Bearer " + localStorage.getItem("accessToken"),
+				},
+				contentType: "application/json",
+			},
+			columns: [
+				{ data: "leaveType", title: "Leave Type" },
 				{
-					data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-					lineTension: 0,
-					backgroundColor: "transparent",
-					borderColor: "#007bff",
-					borderWidth: 4,
-					pointBackgroundColor: "#007bff",
+					data: "startDate",
+					title: "Start Date",
+				},
+				{
+					data: "endDate",
+					title: "End Date",
+				},
+				{ data: "status", title: "Status" },
+
+				{ data: "reason", title: "Reason" },
+				{ data: "workDissemination", title: "Work Dissemination" },
+				{ data: "contactDetails", title: "Contact Details" },
+				{ data: "rejectReason", title: "Reject Reason" },
+				{
+					data: null,
+					title: "Operations",
+					defaultContent:
+						"<button>Edit</button><button>Delete</button><button>Cancel</button>",
+				},
+				{
+					data: "id",
+					title: "Id",
+					className: "hide",
 				},
 			],
-		},
-		options: {
-			scales: {
-				yAxes: [
-					{
-						ticks: {
-							beginAtZero: false,
-						},
-					},
-				],
-			},
-			legend: {
-				display: false,
-			},
-		},
-	});
-})();
+			responsive: true,
+			columnDefs: [
+				{
+					targets: [0, 1, 2, 3, -2],
+					className: "all text-center",
+				},
+			],
+		});
+	}
+});

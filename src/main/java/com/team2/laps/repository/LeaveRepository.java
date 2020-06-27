@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LeaveRepository extends JpaRepository<Leave, String> {
-    @Query(value = "SELECT * FROM leaves WHERE YEAR(start_date) = YEAR(CURDATE()) AND YEAR(end_date) = YEAR(CURDATE()) AND user_id = :id ORDERBY start_date", nativeQuery = true)
+    @Query(value = "SELECT * FROM leaves WHERE YEAR(start_date) = YEAR(CURDATE()) AND YEAR(end_date) = YEAR(CURDATE()) AND user_id = :id ORDER BY start_date", nativeQuery = true)
     List<Leave> findByUserOrderByStartDate(@Param("id") Long id);
 
     // @Query(value = "SELECT leaves.* FROM leaves, users WHERE leaves.user_id =

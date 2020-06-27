@@ -19,12 +19,12 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/api/leave
+GET http://localhost:5000/api/leaves
 Content-Type: 'application/json',
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkzMTY0MTY5LCJleHAiOjE1OTM3Njg5Njl9.AaRBtZRAWjylHEFRTlxmV7UcMZ95ZJlH0MSYLJtgmmNN-7DUTLKHr3Z-vp6inUaw0YJI_eyNO_JpPPe4CFj02g
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTkzMjQzNDIwLCJleHAiOjE1OTM4NDgyMjB9.TShYngLXoZdXbtpE-bCYuzdFWgXFXWhbXuADMoaAt96EEu3y29GPQMFcAVPQCjsSXbWC4ZlhshKEJxe1XgZjlQ
 
 ###
-POST http://localhost:5000/api/leave
+POST http://localhost:5000/api/leaves
 Content-Type: 'application/json',
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkzMTY0MTY5LCJleHAiOjE1OTM3Njg5Njl9.AaRBtZRAWjylHEFRTlxmV7UcMZ95ZJlH0MSYLJtgmmNN-7DUTLKHr3Z-vp6inUaw0YJI_eyNO_JpPPe4CFj02g,
 
