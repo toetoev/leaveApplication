@@ -2,11 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{auth/layout}">
 	<head>
 		<title>Auth</title>
+		<link rel="stylesheet" th:href="@{/css/auth.css}" />
 	</head>
 
-	<body>
+	<body class="text-center">
 		<div layout:fragment="main">
 			<form class="form-signin" id="formSignIn">
+				<img class="" th:src="@{/img/logo.png}" alt="" height="80" />
 				<h1 class="h3 mb-3 font-weight-normal text-center">
 					Please sign in
 				</h1>
