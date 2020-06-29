@@ -3,6 +3,7 @@ package com.team2.laps.controller;
 import java.net.URI;
 import java.util.Collections;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import com.team2.laps.exception.AppException;
@@ -62,6 +63,7 @@ public class AuthController {
         }
 
         @PostMapping("/signup")
+        @RolesAllowed("ROLE_ADMIN")
         public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
                 if (userRepository.existsByUsername(signUpRequest.getUsername())) {
                         return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Username is already taken!"),

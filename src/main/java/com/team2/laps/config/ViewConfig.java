@@ -17,6 +17,8 @@ public class ViewConfig implements WebMvcConfigurer {
         registry.addViewController("/view/dashboard").setViewName("/dashboard/home");
         registry.addViewController("/view/staff/leave").setViewName("/dashboard/staff/leave");
         registry.addViewController("/view/staff/compensation").setViewName("/dashboard/staff/compensation");
+        registry.addViewController("/view/staff/submit").setViewName("/dashboard/staff/submit");
+        registry.addViewController("/view/admin/signup").setViewName("/dashboard/admin/signup");
     }
 
     @Bean

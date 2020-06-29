@@ -8,14 +8,20 @@
 	<body>
 		<ul layout:fragment="menu" class="nav flex-column">
 			<li class="nav-item">
-				<a class="nav-link active" href="#">
-					<i class="far fa-address-book mr-1"></i>
+				<a class="nav-link" th:href="@{/view/staff/submit}">
+					<i class="fas fa-clipboard-list mr-1"></i>
+					Submit Application
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link active" th:href="@{/view/staff/leave}">
+					<i class="fas fa-address-book mr-1"></i>
 					Leave
 				</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#">
-					<i class="fa fa-exchange-alt mr-1"></i>
+				<a class="nav-link" th:href="@{/view/staff/compensation}">
+					<i class="fas fa-frog mr-1"></i>
 					Compensation
 				</a>
 			</li>

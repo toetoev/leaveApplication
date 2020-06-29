@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{dashboard/layout}">
+	<head>
+		<title>Staff - Submit Application</title>
+
+		<link
+			rel="stylesheet"
+			th:href="@{https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css}"
+		/>
+		<link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+	</head>
+
+	<body>
+		<ul layout:fragment="menu" class="nav flex-column">
+			<li class="nav-item">
+				<a class="nav-link active" th:href="@{/view/staff/submit}">
+					<i class="fas fa-clipboard-list mr-1"></i>
+					Submit Application
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/view/staff/leave}">
+					<i class="fas fa-address-book mr-1"></i>
+					Leave
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/view/staff/compensation}">
+					<i class="fas fa-frog mr-1"></i>
+					Compensation
+				</a>
+			</li>
+		</ul>
+		<main
+			layout:fragment="main"
+			role="main"
+			class="col-md-9 ml-sm-auto col-lg-10 px-md-4"
+		>
+			<div
+				class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+			>
+				<h1 class="h2">Submit Leave Application</h1>
+			</div>
+			<div class="col-md-8 order-md-1">
+				<h4 class="mb-3">Leave Form</h4>
+				<form>
+					<!-- Leave Period -->
+					<div class="row">
+						<div class="col-md-6">
+							<label for="startDate">Start Date</label>
+							<div class="form-group">
+								<div
+									class="input-group date"
+									id="datetimepicker7"
+									data-target-input="nearest"
+								>
+									<input
+										type="text"
+										class="form-control datetimepicker-input"
+										data-target="#datetimepicker7"
+									/>
+									<div
+										class="input-group-append"
+										data-target="#datetimepicker7"
+										data-toggle="datetimepicker"
+									>
+										<div class="input-group-text">
+											<i class="fa fa-calendar"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label for="endDate">End Date</label>
+							<div class="form-group">
+								<div
+									class="input-group date"
+									id="datetimepicker8"
+									data-target-input="nearest"
+								>
+									<input
+										type="text"
+										class="form-control datetimepicker-input"
+										data-target="#datetimepicker8"
+									/>
+									<div
+										class="input-group-append"
+										data-target="#datetimepicker8"
+										data-toggle="datetimepicker"
+									>
+										<div class="input-group-text">
+											<i class="fa fa-calendar"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="col-md-6 mb-3">
+							<label for="firstName">Start Date</label>
+							<input
+								type="text"
+								class="form-control"
+								id="firstName"
+								placeholder=""
+								value=""
+								required
+							/>
+							<div class="invalid-feedback">
+								Valid first name is required.
+							</div>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label for="lastName">End Date</label>
+							<input
+								type="text"
+								class="form-control"
+								id="lastName"
+								placeholder=""
+								value=""
+								required
+							/>
+							<div class="invalid-feedback">
+								Valid last name is required.
+							</div>
+						</div> -->
+					</div>
+					<!-- Category of leave -->
+					<div class="mb-4">
+						<label for="leave-type">Leave Type</label>
+						<select
+							class="custom-select d-block w-100"
+							id="leave-type"
+							required
+						>
+							<option value="ANNUAL">Annual</option>
+							<option value="MEDICAL">Medical</option>
+							<option value="COMPENSATION">Compensation</option>
+						</select>
+						<div class="invalid-feedback">
+							Please provide a valid state.
+						</div>
+					</div>
+					<!-- Reason -->
+					<div class="mb-3">
+						<label for="reason">Reason</label>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								id="reason"
+								placeholder="Reason for leave application (Optional)"
+							/>
+						</div>
+					</div>
+					<!-- Work Dissemination -->
+					<div class="mb-4">
+						<label for="work-dissemination"
+							>Work Dissemination</label
+						>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								id="work-dissemination"
+								placeholder="Work dissemination (Optional)"
+							/>
+						</div>
+					</div>
+					<!-- Contact Details -->
+					<div class="mb-4">
+						<label for="contact-details">Contact Details</label>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								id="contact-details"
+								placeholder="Please provide contact details if on an overseas trip (Optional)"
+							/>
+						</div>
+					</div>
+					<button
+						class="btn btn-primary btn-lg btn-block"
+						type="submit"
+					>
+						Submit Application
+					</button>
+				</form>
+			</div>
+		</main>
+
+		<div layout:fragment="script">
+			<script
+				th:src="@{https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js}"
+			></script>
+			<script th:src="@{/js/dashboard.js}"></script>
+			<script th:src="@{/js/submit.js}"></script>
+		</div>
+	</body>
+</html>

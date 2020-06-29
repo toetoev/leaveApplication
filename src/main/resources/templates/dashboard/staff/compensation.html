@@ -7,14 +7,23 @@
 	<body>
 		<ul layout:fragment="menu" class="nav flex-column">
 			<li class="nav-item">
-				<a class="nav-link" href="#">
-					<span data-feather="home"></span>
+				<a class="nav-link" th:href="@{/view/staff/submit}">
+					<i class="fas fa-clipboard-list"></i>
+					Submit Application
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/view/staff/leave}">
+					<i class="far fa-address-book mr-1"></i>
 					Leave
 				</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link active" href="#">
-					<span data-feather="file"></span>
+				<a
+					class="nav-link active"
+					th:href="@{/view/staff/compensation}"
+				>
+					<i class="fa fa-exchange-alt mr-1"></i>
 					Compensation
 				</a>
 			</li>
