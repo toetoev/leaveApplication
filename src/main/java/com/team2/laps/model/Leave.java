@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -42,10 +43,10 @@ public class Leave {
     @Enumerated
     private LeaveType leaveType;
 
-    // @DateTimeFormat(pattern = "yyyy-MM-dd.HH")
+    @JsonFormat(pattern = "MM/dd/YYYY HH")
     private LocalDateTime startDate;
 
-    // @DateTimeFormat(pattern = "yyyy-MM-dd.HH")
+    @JsonFormat(pattern = "MM/dd/YYYY HH")
     private LocalDateTime endDate;
 
     private String reason;
