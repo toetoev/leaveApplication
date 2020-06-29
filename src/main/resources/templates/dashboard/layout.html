@@ -8,6 +8,10 @@
 		/>
 		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 		<link rel="stylesheet" th:href="@{/css/datatables.min.css}" />
+		<link
+			rel="stylesheet"
+			th:href="@{https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css}"
+		/>
 		<link rel="stylesheet" th:href="@{/css/dashboard.css}" />
 	</head>
 
@@ -46,6 +50,9 @@
 		></script>
 		<script
 			th:src="@{//cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js}"
+		></script>
+		<script
+			th:src="@{https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js}"
 		></script>
 		<script defer th:src="@{/js/all.min.js}"></script>
 		<div layout:fragment="script"></div>

@@ -39,73 +39,180 @@
 			<table
 				id="leave-table"
 				class="table table-striped table-bordered dt-responsive nowrap"
+			></table>
+			<div
+				class="modal fade"
+				id="editModal"
+				role="dialog"
+				tabindex="-1"
+				data-backdrop="static"
+				data-keyboard="false"
+				aria-hidden="true"
 			>
-				<!-- <thead>
-					<tr>
-						<th>Name</th>
-						<th>Position</th>
-						<th>Office</th>
-						<th>Age</th>
-						<th>Start date</th>
-						<th>Salary</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Tiger Nixon</td>
-						<td>System Architect</td>
-						<td>Edinburgh</td>
-						<td>61</td>
-						<td>2011/04/25</td>
-						<td>$320,800</td>
-					</tr>
-					<tr>
-						<td>Garrett Winters</td>
-						<td>Accountant</td>
-						<td>Tokyo</td>
-						<td>63</td>
-						<td>2011/07/25</td>
-						<td>$170,750</td>
-					</tr>
-					<tr>
-						<td>Ashton Cox</td>
-						<td>Junior Technical Author</td>
-						<td>San Francisco</td>
-						<td>66</td>
-						<td>2009/01/12</td>
-						<td>$86,000</td>
-					</tr>
-					<tr>
-						<td>Cedric Kelly</td>
-						<td>Senior Javascript Developer</td>
-						<td>Edinburgh</td>
-						<td>22</td>
-						<td>2012/03/29</td>
-						<td>$433,060</td>
-					</tr>
-					<tr>
-						<td>Airi Satou</td>
-						<td>Accountant</td>
-						<td>Tokyo</td>
-						<td>33</td>
-						<td>2008/11/28</td>
-						<td>$162,700</td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<th>Name</th>
-						<th>Position</th>
-						<th>Office</th>
-						<th>Age</th>
-						<th>Start date</th>
-						<th>Salary</th>
-					</tr>
-				</tfoot> -->
-			</table>
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Edit Leave Application</h5>
+							<button
+								type="button"
+								class="close"
+								data-dismiss="modal"
+								aria-label="Close"
+							>
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form>
+								<!-- Leave Period -->
+								<div class="row">
+									<div class="col-md-6">
+										<label for="startDate"
+											>Start Date</label
+										>
+										<div class="form-group">
+											<div
+												class="input-group date"
+												id="startDatetimepicker"
+												data-target-input="nearest"
+											>
+												<input
+													type="text"
+													class="form-control datetimepicker-input"
+													data-target="#startDatetimepicker"
+												/>
+												<div
+													class="input-group-append"
+													data-target="#startDatetimepicker"
+													data-toggle="datetimepicker"
+												>
+													<div
+														class="input-group-text"
+													>
+														<i
+															class="fa fa-calendar"
+														></i>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label for="endDate">End Date</label>
+										<div class="form-group">
+											<div
+												class="input-group date"
+												id="endDatetimepicker"
+												data-target-input="nearest"
+											>
+												<input
+													type="text"
+													class="form-control datetimepicker-input"
+													data-target="#endDatetimepicker"
+												/>
+												<div
+													class="input-group-append"
+													data-target="#endDatetimepicker"
+													data-toggle="datetimepicker"
+												>
+													<div
+														class="input-group-text"
+													>
+														<i
+															class="fa fa-calendar"
+														></i>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Category of leave -->
+								<div class="mb-4">
+									<label for="leave-type">Leave Type</label>
+									<select
+										class="custom-select d-block w-100"
+										id="leave-type"
+										required
+									>
+										<option value="ANNUAL">Annual</option>
+										<option value="MEDICAL">Medical</option>
+										<option value="COMPENSATION"
+											>Compensation</option
+										>
+									</select>
+									<div class="invalid-feedback">
+										Please provide a valid state.
+									</div>
+								</div>
+								<!-- Reason -->
+								<div class="mb-3">
+									<label for="reason">Reason</label>
+									<div class="input-group">
+										<input
+											type="text"
+											class="form-control"
+											id="reason"
+											placeholder="Reason for leave application (Optional)"
+										/>
+									</div>
+								</div>
+								<!-- Work Dissemination -->
+								<div class="mb-4">
+									<label for="work-dissemination"
+										>Work Dissemination</label
+									>
+									<div class="input-group">
+										<input
+											type="text"
+											class="form-control"
+											id="work-dissemination"
+											placeholder="Work dissemination (Optional)"
+										/>
+									</div>
+								</div>
+								<!-- Contact Details -->
+								<div class="mb-4">
+									<label for="contact-details"
+										>Contact Details</label
+									>
+									<div class="input-group">
+										<input
+											type="text"
+											class="form-control"
+											id="contact-details"
+											placeholder="Please provide contact details if on an overseas trip (Optional)"
+										/>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-dismiss="modal"
+							>
+								Close
+							</button>
+							<button
+								class="btn btn-primary"
+								type="submit"
+								id="saveEdit"
+							>
+								Save
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<input type="hidden" id="item_id" value="0" />
 		</main>
 
 		<div layout:fragment="script">
+			<script
+				th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js}"
+			></script>
 			<script th:src="@{/js/dashboard.js}"></script>
 		</div>
 	</body>

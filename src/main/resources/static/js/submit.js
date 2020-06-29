@@ -19,18 +19,19 @@ $.fn.datetimepicker.Constructor.Default = $.extend(
 );
 
 $(function () {
-	$("#datetimepicker7").datetimepicker({
+	$("#startDatetimepicker").datetimepicker({
 		daysOfWeekDisabled: [0, 6],
 		minDate: moment().add(1, "days").startOf("day"),
+		useCurrent: false,
 	});
-	$("#datetimepicker8").datetimepicker({
+	$("#endDatetimepicker").datetimepicker({
 		daysOfWeekDisabled: [0, 6],
 		useCurrent: false,
 	});
-	$("#datetimepicker7").on("change.datetimepicker", function (e) {
-		$("#datetimepicker8").datetimepicker("minDate", e.date);
+	$("#startDatetimepicker").on("change.datetimepicker", function (e) {
+		$("#endDatetimepicker").datetimepicker("minDate", e.date);
 	});
-	$("#datetimepicker8").on("change.datetimepicker", function (e) {
-		$("#datetimepicker7").datetimepicker("maxDate", e.date);
+	$("#endDatetimepicker").on("change.datetimepicker", function (e) {
+		$("#startDatetimepicker").datetimepicker("maxDate", e.date);
 	});
 });
