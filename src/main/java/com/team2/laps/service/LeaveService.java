@@ -8,6 +8,7 @@ import com.team2.laps.model.Leave;
 import com.team2.laps.model.LeaveStatus;
 import com.team2.laps.model.LeaveType;
 import com.team2.laps.model.User;
+import com.team2.laps.payload.ApiResponse;
 import com.team2.laps.repository.LeaveRepository;
 import com.team2.laps.repository.UserRepository;
 
@@ -38,64 +39,60 @@ public class LeaveService {
             return leaveRepository.findCurrentYearLeaveByUserOrderByStartDate(user.getId());
     }
 
-    public boolean createOrUpdateLeave(Leave leave, boolean isManager) {
-        if (isValid(leave, isManager)) {
+    public ApiResponse createOrUpdateLeave(Leave leave, boolean isManager) {
+        String isValid = isValid(leave, isManager);
+        if (isValid == "valid") {
             if (leaveRepository.save(leave) != null)
-                return true;
+                return new ApiResponse(true, "Leave created or updated");
             else
-                return false;
+                return new ApiResponse(false, "Leave create or update failed");
         }
-        return false;
+        return new ApiResponse(false, isValid);
     }
 
-    public boolean deleteLeave(String leaveId, LeaveStatus leaveStatus, boolean isManager) {
+    public ApiResponse deleteOrCancelLeave(String leaveId, LeaveStatus leaveStatus, boolean isManager) {
         Optional<Leave> leave = leaveRepository.findById(leaveId);
         if (leaveRepository.findById(leaveId).isPresent()) {
             Leave newLeave = leave.get();
             if (isValidStatusChange(leaveId, leaveStatus, isManager)) {
                 newLeave.setStatus(leaveStatus);
                 if (leaveRepository.save(newLeave) != null)
-                    return true;
+                    return new ApiResponse(true, "Leave status changed");
                 else
-                    return false;
+                    return new ApiResponse(false, "Leave status change failed");
             } else {
-                return false;
+                return new ApiResponse(false, "Invalid status change");
             }
         } else {
-            logger.error("cannot find");
-            return false;
-
+            return new ApiResponse(false, "Cannot find leave to be deleted");
         }
     }
 
-    public boolean isValid(Leave leave, boolean isManager) {
+    public String isValid(Leave leave, boolean isManager) {
         // Validate claim date
         if (leave.getStartDate().compareTo(leave.getEndDate()) >= 0) {
-            logger.error("invalid date");
 
-            return false;
+            return "invalid date";
         }
         // Validate left time for leave
         if (leave.getLeaveType() == LeaveType.ANNUAL) {
             Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
             if (duration.toDays() > leave.getUser().getAnnualLeaveLeft()) {
-                logger.error("no enough time left");
 
-                return false;
+                return "not enough leave left";
             }
         } else if (leave.getLeaveType() == LeaveType.MEDICAL) {
             Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
             if (duration.toDays() > leave.getUser().getMedicalLeaveLeft()) {
-                logger.error("no enough time left");
-                return false;
+                return "not enough leave left";
             }
         }
         if (!isValidStatusChange(leave.getId(), leave.getStatus(), isManager))
-            return false;
+            return "invalid status change";
         // Validate rejected reason
         if (leave.getStatus() == LeaveStatus.REJECTED && leave.getRejectReason() == null)
-            return false;
-        return true;
+            return "need rejected reason";
+        return "valid";
     }
 
     public boolean isValidStatusChange(String id, LeaveStatus leaveStatus, boolean isManager) {

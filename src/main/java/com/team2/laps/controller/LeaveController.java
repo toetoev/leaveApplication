@@ -52,10 +52,10 @@ public class LeaveController {
 
     @DeleteMapping("/{id}/{leaveStatus}")
     @RolesAllowed({ "ROLE_ADMINISTRATIVE_STAFF", "ROLE_PROFESSIONAL_STAFF" })
-    public ResponseEntity<?> deleteLeave(@PathVariable String id, @PathVariable LeaveStatus leaveStatus,
+    public ResponseEntity<?> deleteOrCancelLeave(@PathVariable String id, @PathVariable LeaveStatus leaveStatus,
             Authentication authentication) {
         boolean isManager = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"));
-        return ResponseEntity.ok(leaveService.deleteLeave(id, leaveStatus, isManager));
+        return ResponseEntity.ok(leaveService.deleteOrCancelLeave(id, leaveStatus, isManager));
     }
 }
