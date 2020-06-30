@@ -133,7 +133,7 @@ function initDataTable() {
 			{ data: "workDissemination", title: "Work Dissemination" },
 			{ data: "contactDetails", title: "Contact Details" },
 			{ data: "rejectReason", title: "Reject Reason" },
-			{ data: "id", title: "Operations" },
+			{ data: "id", title: "Actions" },
 		],
 		responsive: true,
 		columnDefs: [

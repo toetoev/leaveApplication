@@ -1,18 +1,16 @@
 package com.team2.laps.payload;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public class ApiResponse {
-    @JsonIgnore
     private Boolean success;
-    @JsonIgnore
     private String message;
     private Object data;
 

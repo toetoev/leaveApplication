@@ -71,7 +71,6 @@ public class LeaveService {
     public String isValid(Leave leave, boolean isManager) {
         // Validate claim date
         if (leave.getStartDate().compareTo(leave.getEndDate()) >= 0) {
-
             return "invalid date";
         }
         // Validate left time for leave
