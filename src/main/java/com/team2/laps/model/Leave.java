@@ -43,10 +43,11 @@ public class Leave {
     @Enumerated
     private LeaveType leaveType;
 
-    @JsonFormat(pattern = "MM/dd/YYYY HH")
+    @JsonFormat(pattern = "MM/dd/yyyy HH")
     private LocalDateTime startDate;
 
-    @JsonFormat(pattern = "MM/dd/YYYY HH")
+    // @DateTimeFormat(iso = )
+    @JsonFormat(pattern = "MM/dd/yyyy HH")
     private LocalDateTime endDate;
 
     private String reason;

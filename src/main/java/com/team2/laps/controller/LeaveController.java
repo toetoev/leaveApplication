@@ -4,7 +4,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import com.team2.laps.model.Leave;
-import com.team2.laps.model.TimePeriod;
 import com.team2.laps.payload.ApiResponse;
 import com.team2.laps.service.LeaveService;
 import com.team2.laps.service.UserService;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,9 +36,10 @@ public class LeaveController {
 
     @GetMapping
     @RolesAllowed({ "ROLE_ADMINISTRATIVE_STAFF", "ROLE_PROFESSIONAL_STAFF", "ROLE_MANAGER" })
-    public ResponseEntity<?> getLeaveByUser(@RequestParam(required = false) TimePeriod timePeriod,
-            @RequestParam(required = false) String leaveId) {
-        return ResponseEntity.ok(new ApiResponse(leaveService.getLeaveByUser(timePeriod, leaveId)));
+    public ResponseEntity<?> getLeaveByUser(Authentication authentication) {
+        boolean isManager = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"));
+        return ResponseEntity.ok(new ApiResponse(leaveService.getLeaveByUser(isManager)));
     }
 
     // TODO: test validation
@@ -54,8 +53,7 @@ public class LeaveController {
         boolean isManager = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"));
         leave.setUser(userService.getCurrentUser());
-        return ResponseEntity
-                .ok(new ApiResponse(leaveService.createOrUpdateLeave(leave, isManager), "Wrong Data Content Entered"));
+        return ResponseEntity.ok(leaveService.createOrUpdateLeave(leave, isManager));
     }
 
     @DeleteMapping("/{id}")
