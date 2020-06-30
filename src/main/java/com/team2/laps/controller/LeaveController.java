@@ -4,6 +4,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import com.team2.laps.model.Leave;
+import com.team2.laps.model.LeaveStatus;
 import com.team2.laps.payload.ApiResponse;
 import com.team2.laps.service.LeaveService;
 import com.team2.laps.service.UserService;
@@ -11,10 +12,8 @@ import com.team2.laps.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,23 +41,21 @@ public class LeaveController {
         return ResponseEntity.ok(new ApiResponse(leaveService.getLeaveByUser(isManager)));
     }
 
-    // TODO: test validation
     @PostMapping
     @RolesAllowed({ "ROLE_ADMINISTRATIVE_STAFF", "ROLE_PROFESSIONAL_STAFF", "ROLE_MANAGER" })
-    public ResponseEntity<?> createOrUpdateLeave(@Valid @RequestBody Leave leave, Authentication authentication,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.ok(new ApiResponse(false, "Invalid Leave"));
-        }
+    public ResponseEntity<?> createOrUpdateLeave(@Valid @RequestBody Leave leave, Authentication authentication) {
         boolean isManager = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"));
         leave.setUser(userService.getCurrentUser());
         return ResponseEntity.ok(leaveService.createOrUpdateLeave(leave, isManager));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteLeave(@PathVariable String id) {
-        leaveService.deleteLeave(id);
-        return new ResponseEntity<>(id, HttpStatus.OK);
+    @DeleteMapping("/{id}/{leaveStatus}")
+    @RolesAllowed({ "ROLE_ADMINISTRATIVE_STAFF", "ROLE_PROFESSIONAL_STAFF" })
+    public ResponseEntity<?> deleteLeave(@PathVariable String id, @PathVariable LeaveStatus leaveStatus,
+            Authentication authentication) {
+        boolean isManager = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"));
+        return ResponseEntity.ok(leaveService.deleteLeave(id, leaveStatus, isManager));
     }
 }

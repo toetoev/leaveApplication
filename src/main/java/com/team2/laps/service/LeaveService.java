@@ -2,6 +2,7 @@ package com.team2.laps.service;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 import com.team2.laps.model.Leave;
 import com.team2.laps.model.LeaveStatus;
@@ -47,9 +48,24 @@ public class LeaveService {
         return false;
     }
 
-    public void deleteLeave(String leaveId) {
-        logger.error(leaveId);
-        leaveRepository.deleteById(leaveId);
+    public boolean deleteLeave(String leaveId, LeaveStatus leaveStatus, boolean isManager) {
+        Optional<Leave> leave = leaveRepository.findById(leaveId);
+        if (leaveRepository.findById(leaveId).isPresent()) {
+            Leave newLeave = leave.get();
+            if (isValidStatusChange(leaveId, leaveStatus, isManager)) {
+                newLeave.setStatus(leaveStatus);
+                if (leaveRepository.save(newLeave) != null)
+                    return true;
+                else
+                    return false;
+            } else {
+                return false;
+            }
+        } else {
+            logger.error("cannot find");
+            return false;
+
+        }
     }
 
     public boolean isValid(Leave leave, boolean isManager) {
@@ -71,37 +87,47 @@ public class LeaveService {
             Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
             if (duration.toDays() > leave.getUser().getMedicalLeaveLeft()) {
                 logger.error("no enough time left");
-
                 return false;
             }
         }
+        if (!isValidStatusChange(leave.getId(), leave.getStatus(), isManager))
+            return false;
         // Validate rejected reason
         if (leave.getStatus() == LeaveStatus.REJECTED && leave.getRejectReason() == null)
             return false;
+        return true;
+    }
+
+    public boolean isValidStatusChange(String id, LeaveStatus leaveStatus, boolean isManager) {
         // Validate status change
-        if (leave.getId() != null) {
+        if (id != null) {
             boolean isStatusChangeValid = false;
-            Leave oldLeave = leaveRepository.findById(leave.getId()).get();
+            Leave oldLeave = leaveRepository.findById(id).get();
+            if (oldLeave.getStatus() == leaveStatus)
+                return true;
             if (isManager) {
                 if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
-                        && (leave.getStatus() == LeaveStatus.APPROVED || leave.getStatus() == LeaveStatus.REJECTED))
+                        && (leaveStatus == LeaveStatus.APPROVED || leaveStatus == LeaveStatus.REJECTED))
                     isStatusChangeValid = true;
                 else
                     isStatusChangeValid = false;
             } else {
                 if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
-                        && leave.getStatus() == LeaveStatus.DELETED)
+                        && (leaveStatus == LeaveStatus.DELETED || leaveStatus == LeaveStatus.UPDATED))
                     isStatusChangeValid = true;
-                else if (oldLeave.getStatus() == LeaveStatus.APPLIED && leave.getStatus() == LeaveStatus.UPDATED)
+                else if (oldLeave.getStatus() == LeaveStatus.APPLIED && leaveStatus == LeaveStatus.UPDATED)
                     isStatusChangeValid = true;
-                else if (oldLeave.getStatus() == LeaveStatus.APPROVED && leave.getStatus() == LeaveStatus.CANCELED)
+                else if (oldLeave.getStatus() == LeaveStatus.APPROVED && leaveStatus == LeaveStatus.CANCELED)
                     isStatusChangeValid = true;
                 else
                     isStatusChangeValid = false;
             }
-            if (!isStatusChangeValid)
+            if (!isStatusChangeValid) {
                 return false;
+            } else {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 }

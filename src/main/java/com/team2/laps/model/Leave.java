@@ -46,7 +46,6 @@ public class Leave {
     @JsonFormat(pattern = "MM/dd/yyyy HH")
     private LocalDateTime startDate;
 
-    // @DateTimeFormat(iso = )
     @JsonFormat(pattern = "MM/dd/yyyy HH")
     private LocalDateTime endDate;
 
