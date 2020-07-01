@@ -57,8 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
                 .antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html",
                         "/**/*.css", "/**/*.js")
-                .permitAll().antMatchers("/api/auth/**").permitAll().antMatchers("/view/**").permitAll().anyRequest()
-                .authenticated();
+                .permitAll().antMatchers("/api/users/signin/**").permitAll().antMatchers("/view/**").permitAll()
+                .anyRequest().authenticated();
 
         // Add our custom JWT security filter
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
