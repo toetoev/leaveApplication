@@ -20,7 +20,7 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class UserPrincipal implements UserDetails {
     private static final long serialVersionUID = 4885054175823454469L;
-    private Long id;
+    private String id;
     private String name;
     private String username;
 

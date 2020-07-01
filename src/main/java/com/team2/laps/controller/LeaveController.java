@@ -9,8 +9,6 @@ import com.team2.laps.payload.ApiResponse;
 import com.team2.laps.service.LeaveService;
 import com.team2.laps.service.UserService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,8 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/leaves")
 public class LeaveController {
-    private static final Logger logger = LoggerFactory.getLogger(LeaveService.class);
-
     @Autowired
     LeaveService leaveService;
 
