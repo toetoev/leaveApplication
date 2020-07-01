@@ -10,7 +10,6 @@ $("#submitSignUp").click(function (e) {
 		},
 		data: JSON.stringify({
 			name: $("#name").val(),
-			username: $("#username").val(),
 			email: $("#email").val(),
 			password: $("#password").val(),
 			role: $("#role").val(),

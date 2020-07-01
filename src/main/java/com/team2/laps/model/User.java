@@ -1,12 +1,10 @@
 package com.team2.laps.model;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,15 +13,17 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.NaturalId;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "email"),
+        @UniqueConstraint(columnNames = "name") })
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -42,26 +43,17 @@ public class User {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    @NotBlank
-    @Size(max = 40)
+    @Size(max = 15)
     private String name;
 
-    @NotBlank
-    @Size(max = 15)
-    private String username;
-
-    @NaturalId
     @Size(max = 40)
     @Email
     private String email;
 
-    @NotBlank
     @Size(max = 100)
+    @JsonIgnore
     private String password;
 
-    @Enumerated
-    private Gender gender;
-    private String phoneNumber;
     private int annualLeaveEntitled;
     private int annualLeaveLeft;
     private int compensationLeft;
@@ -71,26 +63,40 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles;
+    private Set<Role> roles = new HashSet<Role>();
 
-    @ManyToOne(cascade = { CascadeType.ALL })
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_to")
     private User reportTo;
 
-    @OneToMany(mappedBy = "reportTo")
+    @OneToMany(mappedBy = "reportTo", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<User> subordinates = new HashSet<User>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Leave> leaves;
+    private Set<Leave> leaves = new HashSet<Leave>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Compensation> compensations;
+    private Set<Compensation> compensations = new HashSet<Compensation>();
 
-    public User(String name, String username, String email, String password) {
+    public User(String name, String email, String password) {
         this.name = name;
-        this.username = username;
         this.email = email;
         this.password = password;
     }
 
+    public User(String id) {
+        this.id = id;
+    }
+
+    public User(Set<Role> role) {
+        this.roles = role;
+    }
+
+    @PreRemove
+    private void removeUser() {
+        for (User user : subordinates) {
+            user.setReportTo(null);
+        }
+    }
 }

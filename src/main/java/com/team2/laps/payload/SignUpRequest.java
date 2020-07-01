@@ -13,12 +13,8 @@ import lombok.Setter;
 @Setter
 public class SignUpRequest {
     @NotBlank
-    @Size(max = 40)
-    private String name;
-
-    @NotBlank
     @Size(max = 15)
-    private String username;
+    private String name;
 
     @NotBlank
     @Size(max = 40)

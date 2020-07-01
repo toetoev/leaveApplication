@@ -21,7 +21,6 @@ import lombok.Getter;
 public class UserPrincipal implements UserDetails {
     private static final long serialVersionUID = 4885054175823454469L;
     private String id;
-    private String name;
     private String username;
 
     @JsonIgnore
@@ -36,8 +35,7 @@ public class UserPrincipal implements UserDetails {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 
-        return new UserPrincipal(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getPassword(),
-                authorities);
+        return new UserPrincipal(user.getId(), user.getName(), user.getEmail(), user.getPassword(), authorities);
     }
 
     @Override

@@ -12,15 +12,13 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByUsernameOrEmail(String username, String email);
-
-    Optional<User> findByUsername(String username);
+    Optional<User> findByNameOrEmail(String username, String email);
 
     List<User> findByIdIn(List<String> userIds);
 
     Optional<User> findByName(String name);
 
-    Boolean existsByUsername(String username);
+    Boolean existsByName(String username);
 
     Boolean existsByEmail(String email);
 
