@@ -123,7 +123,9 @@ public class LeaveService {
             } else {
                 return true;
             }
-        }
-        return false;
+        } else if (leaveStatus == LeaveStatus.APPLIED)
+            return true;
+        else
+            return false;
     }
 }
