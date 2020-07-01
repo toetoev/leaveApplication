@@ -74,7 +74,7 @@ function delete_action(item_id) {
 					contentType: "application/json",
 					success: function (res) {
 						console.log(res);
-						location.reload();
+						dataTable.ajax.reload();
 					},
 				});
 			}
@@ -107,7 +107,7 @@ function cancel_action(item_id) {
 					contentType: "application/json",
 					success: function (res) {
 						console.log(res);
-						location.reload();
+						dataTable.ajax.reload();
 					},
 				});
 			}
@@ -204,7 +204,8 @@ $("#saveEdit").click(function (e) {
 		}),
 		success: function (res) {
 			console.log(res);
-			location.reload();
+			dataTable.ajax.reload();
+			$("#editModal").modal("hide");
 		},
 	});
 });
