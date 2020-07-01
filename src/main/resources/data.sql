@@ -8,6 +8,5 @@ INSERT IGNORE INTO roles (name)
 INSERT IGNORE INTO roles (name)
 	VALUES ('ROLE_MANAGER');
 
-SET @UUID = (SELECT UUID() AS UUID);
-INSERT IGNORE INTO users (id, name, username, password) VALUES (@UUID, 'Admin','admin','$2a$10$HmwZebguqxttEraUTFvwpuErunkGhk.5oFSVnRnl0esn3tpy.TXBG');
-INSERT IGNORE INTO user_roles (user_id, role_id) VALUES (@UUID,'ROLE_ADMIN');
+INSERT IGNORE INTO users (id, name, username, password) VALUES ("02c76432-bb6e-11ea-8d8b-0242ac110002", 'Admin','admin','$2a$10$HmwZebguqxttEraUTFvwpuErunkGhk.5oFSVnRnl0esn3tpy.TXBG');
+INSERT IGNORE INTO user_roles (user_id, role_id) VALUES ("02c76432-bb6e-11ea-8d8b-0242ac110002",'ROLE_ADMIN');

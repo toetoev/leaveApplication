@@ -4,7 +4,7 @@ $("#formSignIn").submit(function (e) {
 	var password = $("input[name=password]").val();
 	$.ajax({
 		type: "POST",
-		url: "/api/auth/signin",
+		url: "/api/users/signin",
 		data: JSON.stringify({
 			usernameOrEmail: usernameOrEmail,
 			password: password,
@@ -22,7 +22,7 @@ $("#formSignIn").submit(function (e) {
 					window.location = "/view/staff/leave";
 					break;
 				case "ROLE_ADMIN":
-					window.location = "/view/dashboard";
+					window.location = "/view/admin/manage";
 					break;
 			}
 		},

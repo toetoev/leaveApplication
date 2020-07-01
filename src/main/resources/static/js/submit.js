@@ -65,9 +65,7 @@ $("#submitLeave").click(function (e) {
 		success: function (res) {
 			console.log(res);
 			bootbox.alert(
-				res.success
-					? "Leave Application Submitted"
-					: "Please Provide Valid Leave Info"
+				res.success ? "Leave Application Submitted" : res.message
 			);
 		},
 	});

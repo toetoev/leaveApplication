@@ -2,10 +2,16 @@ package com.team2.laps.controller;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
+import com.team2.laps.model.User;
+import com.team2.laps.payload.LoginRequest;
+import com.team2.laps.payload.SignUpRequest;
+import com.team2.laps.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,60 +21,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.team2.laps.model.Role;
-import com.team2.laps.model.RoleName;
-import com.team2.laps.model.User;
-import com.team2.laps.payload.SignUpRequest;
-import com.team2.laps.repository.RoleRepository;
-import com.team2.laps.service.UserService;
-
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
-
-    @Autowired
-    RoleRepository roleRepository;
-    
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    
 	@Autowired
-	private UserService uservice;
-	
-	@GetMapping("/users")
-	public List<User> listUsers(){
-		return uservice.findAll();
+	private UserService userService;
+
+	@PostMapping("/signin")
+	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+		return ResponseEntity.ok(userService.signInUser(loginRequest));
 	}
-	
+
+	@PostMapping("/signup")
+	@RolesAllowed("ROLE_ADMIN")
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+		return ResponseEntity.ok(userService.registerUser(signUpRequest));
+	}
+
+	@GetMapping
+	@RolesAllowed("ROLE_ADMIN")
+	public List<User> getAllUsers() {
+		return userService.getAll();
+	}
+
 	@DeleteMapping("/{id}")
-	public List<User> deleteUser(@PathVariable Long id) {
-		uservice.deleteUser(id);
-		return uservice.findAll();
+	@RolesAllowed("ROLE_ADMIN")
+	public void deleteUser(@PathVariable String id) {
+		userService.deleteUser(id);
 	}
-	
-	@PostMapping("/create")
-	public List<User> addUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-		User user = new User(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(), signUpRequest.getPassword());
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		uservice.saveUser(user);
-		return uservice.findAll();
-	}
-	
+
 	@PutMapping("/{id}")
-	public List<User> editUser(@PathVariable Long id, @RequestBody User updatedUser){
-		User currentUser = uservice.findById(id);
-		// User manager = uservice.findByName(updatedUser.getReportTo());
-		User manager = updatedUser.getReportTo();
-		Role role = roleRepository.findByName(RoleName.ROLE_MANAGER).get();
-		currentUser.setName(updatedUser.getName());
-		currentUser.setUsername(updatedUser.getUsername());
-		currentUser.setEmail(updatedUser.getEmail());
-		currentUser.setPassword(updatedUser.getPassword());
-		currentUser.setGender(updatedUser.getGender());
-		currentUser.setAnnualLeaveEntitled(updatedUser.getAnnualLeaveEntitled());
-		// currentUser.setRoles(Collections.singleton(assignRole));
-		uservice.saveUser(currentUser);
-		return uservice.findAll();
+	@RolesAllowed("ROLE_ADMIN")
+	public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody User user) {
+		return ResponseEntity.ok(userService.updateUser(id, user));
 	}
 
 }
