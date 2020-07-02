@@ -1,12 +1,12 @@
 $("#formSignIn").submit(function (e) {
 	e.preventDefault();
-	var usernameOrEmail = $("input[name=usernameOrEmail]").val();
+	var nameOrEmail = $("input[name=nameOrEmail]").val();
 	var password = $("input[name=password]").val();
 	$.ajax({
 		type: "POST",
 		url: "/api/users/signin",
 		data: JSON.stringify({
-			usernameOrEmail: usernameOrEmail,
+			nameOrEmail: nameOrEmail,
 			password: password,
 		}),
 		dataType: "json",
