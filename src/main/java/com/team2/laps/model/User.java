@@ -95,6 +95,7 @@ public class User {
 
     @PreRemove
     private void removeUser() {
+        roles.clear();
         for (User user : subordinates) {
             user.setReportTo(null);
         }
