@@ -34,7 +34,6 @@ public class LeaveService {
 
     @Transactional
     public List<Leave> getLeaveByUser(boolean isManager) {
-        // Get current logged in user
         User user = userService.getCurrentUser();
         if (isManager)
             return leaveRepository.findLeaveForApprovalBySubordinatesOrderByStartDate(user.getId());
@@ -83,7 +82,6 @@ public class LeaveService {
         if (leave.getLeaveType() == LeaveType.ANNUAL) {
             Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
             if (duration.toDays() > leave.getUser().getAnnualLeaveLeft()) {
-
                 return "not enough leave left";
             }
         } else if (leave.getLeaveType() == LeaveType.MEDICAL) {
