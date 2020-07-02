@@ -1,6 +1,8 @@
 package com.team2.laps.service;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -50,8 +52,7 @@ public class LeaveService {
                 Leave oldLeave = leaveRepository.findById(leave.getId()).get();
                 if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
                         && leave.getStatus() == LeaveStatus.APPROVED) {
-                    Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
-
+                    Duration duration = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
                     if (leave.getLeaveType() == LeaveType.ANNUAL) {
                         leave.getUser().setAnnualLeaveLeft(oldLeave.getUser().getAnnualLeaveLeft() - duration.toDays());
                     }
@@ -94,7 +95,7 @@ public class LeaveService {
         }
         // Validate left time for leave
         if (leave.getLeaveType() == LeaveType.ANNUAL) {
-            Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
+            Duration duration = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
             if (duration.toDays() > leave.getUser().getAnnualLeaveLeft()) {
                 return "not enough leave left";
             }
@@ -158,5 +159,20 @@ public class LeaveService {
             return true;
         else
             return false;
+    }
+
+    public Duration calculateAnnualLeaveDuration(LocalDateTime startDate, LocalDateTime endDate) {
+        long days = Duration.between(startDate, endDate).toDays();
+        long result = 0;
+        if (days <= 14) {
+            result = (days % 7) * 5;
+            for (int i = 0; i < days / 7; i++) {
+                if (startDate.plusDays(i).getDayOfWeek() != DayOfWeek.SATURDAY
+                        && startDate.plusDays(i).getDayOfWeek() != DayOfWeek.SUNDAY)
+                    result++;
+            }
+            return Duration.ofDays(result);
+        } else
+            return Duration.ofDays(days);
     }
 }
