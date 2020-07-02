@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import com.team2.laps.exception.AppException;
 import com.team2.laps.model.Role;
 import com.team2.laps.model.RoleName;
@@ -50,11 +52,13 @@ public class UserService {
 	@Autowired
 	JwtTokenProvider tokenProvider;
 
+	@Transactional
 	public User getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return userRepository.findByName(auth.getName()).get();
 	}
 
+	@Transactional
 	public ApiResponse registerUser(SignUpRequest signUpRequest) {
 		if (userRepository.existsByName(signUpRequest.getName())) {
 			return new ApiResponse(false, "Username is already taken!");
@@ -73,6 +77,7 @@ public class UserService {
 			return new ApiResponse(false, "User registration failed");
 	}
 
+	@Transactional
 	public JwtAuthenticationResponse signInUser(LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getNameOrEmail(), loginRequest.getPassword()));
@@ -83,10 +88,12 @@ public class UserService {
 		return new JwtAuthenticationResponse(jwt, roleName);
 	}
 
+	@Transactional
 	public void deleteUser(String id) {
 		userRepository.deleteById(id);
 	}
 
+	@Transactional
 	public ApiResponse updateUser(String id, User user) {
 		// if (userRepository.findById(id).get().getEmail() == user.getEmail()
 		// || userRepository.findById(id).get().getUsername() == user.getUsername()) {
@@ -98,7 +105,7 @@ public class UserService {
 		// }
 		// }
 		user.getRoles().forEach(x -> logger.error(x.getName().toString()));
-		// User oldUser = userRepository.findById(user.getReportTo().getId()).get();
+		User oldUser = userRepository.findById(id).get();
 		if (user.getReportTo() != null && user.getRoles().iterator().next().getName() != RoleName.ROLE_MANAGER) {
 			if (userRepository.findById(user.getReportTo().getId()).isPresent()) {
 				user.setReportTo(userRepository.findById(user.getReportTo().getId()).get());
@@ -115,12 +122,14 @@ public class UserService {
 		// logger.error(oldUser.getPassword());
 		// user.setPassword(oldUser.getPassword());
 		user.setId(id);
+		user.setPassword(oldUser.getPassword());
 		if (userRepository.save(user) != null)
 			return new ApiResponse(true, "User updated successfully");
 		else
 			return new ApiResponse(false, "User update failed");
 	}
 
+	@Transactional
 	public List<User> getAll(RoleName role) {
 		if (role == RoleName.ROLE_MANAGER) {
 			return userRepository.findAll().stream()

@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import com.team2.laps.model.Leave;
 import com.team2.laps.model.LeaveStatus;
 import com.team2.laps.model.LeaveType;
@@ -30,6 +32,7 @@ public class LeaveService {
     @Autowired
     UserService userService;
 
+    @Transactional
     public List<Leave> getLeaveByUser(boolean isManager) {
         // Get current logged in user
         User user = userService.getCurrentUser();
@@ -39,6 +42,7 @@ public class LeaveService {
             return leaveRepository.findCurrentYearLeaveByUserOrderByStartDate(user.getId());
     }
 
+    @Transactional
     public ApiResponse createOrUpdateLeave(Leave leave, boolean isManager) {
         String isValid = isValid(leave, isManager);
         if (isValid == "valid") {
@@ -50,6 +54,7 @@ public class LeaveService {
         return new ApiResponse(false, isValid);
     }
 
+    @Transactional
     public ApiResponse deleteOrCancelLeave(String leaveId, LeaveStatus leaveStatus, boolean isManager) {
         Optional<Leave> leave = leaveRepository.findById(leaveId);
         if (leaveRepository.findById(leaveId).isPresent()) {
@@ -68,6 +73,7 @@ public class LeaveService {
         }
     }
 
+    @Transactional
     public String isValid(Leave leave, boolean isManager) {
         // Validate claim date
         if (leave.getStartDate().compareTo(leave.getEndDate()) >= 0) {
@@ -94,6 +100,7 @@ public class LeaveService {
         return "valid";
     }
 
+    @Transactional
     public boolean isValidStatusChange(String id, LeaveStatus leaveStatus, boolean isManager) {
         // Validate status change
         if (id != null) {

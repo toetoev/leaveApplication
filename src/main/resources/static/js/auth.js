@@ -15,7 +15,7 @@ $("#formSignIn").submit(function (e) {
 			localStorage.setItem("accessToken", res.accessToken);
 			switch (res.roleName) {
 				case "ROLE_MANAGER":
-					window.location = "/view/dashboard";
+					window.location = "/view/manager/approve";
 					break;
 				case "ROLE_ADMINISTRATIVE_STAFF":
 				case "ROLE_PROFESSIONAL_STAFF":
