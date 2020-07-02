@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.team2.laps.exception.AppException;
+import com.team2.laps.model.LeaveStatus;
+import com.team2.laps.model.LeaveType;
 import com.team2.laps.model.Role;
 import com.team2.laps.model.RoleName;
 import com.team2.laps.model.User;
@@ -19,8 +21,6 @@ import com.team2.laps.repository.RoleRepository;
 import com.team2.laps.repository.UserRepository;
 import com.team2.laps.security.JwtTokenProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,9 +32,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-
-	private static final Logger logger = LoggerFactory.getLogger(LeaveService.class);
-
 	@Autowired
 	LeaveRepository leaveRepository;
 
@@ -102,54 +99,80 @@ public class UserService {
 				new UsernamePasswordAuthenticationToken(loginRequest.getNameOrEmail(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = tokenProvider.generateToken(authentication);
-		RoleName roleName = userRepository.findById(tokenProvider.getUserIdFromJWT(jwt)).get().getRoles().iterator()
-				.next().getName();
+		String roleName = authentication.getAuthorities().stream().iterator().next().getAuthority();
 		return new JwtAuthenticationResponse(jwt, roleName);
 	}
 
 	@Transactional
 	public void deleteUser(String id) {
-		userRepository.deleteById(id);
+		if (id != null || userRepository.findById(id).isPresent())
+			userRepository.deleteById(id);
 	}
 
 	@Transactional
 	public ApiResponse updateUser(String id, User user) {
-		User oldUser = userRepository.findById(id).get();
-		if (user.getReportTo() != null && user.getRoles().iterator().next().getName() != RoleName.ROLE_MANAGER) {
-			if (userRepository.findById(user.getReportTo().getId()).isPresent()) {
-				user.setReportTo(userRepository.findById(user.getReportTo().getId()).get());
+		if (id != null || userRepository.findById(id).isPresent()) {
+			User oldUser = userRepository.findById(id).get();
+			// Report To
+			if (user.getReportTo() != null && !user.isRole(RoleName.ROLE_MANAGER)) {
+				if (userRepository.findById(user.getReportTo().getId()).isPresent()) {
+					user.setReportTo(userRepository.findById(user.getReportTo().getId()).get());
+				}
 			}
-		} else if (user.getRoles().iterator().next().getName() == RoleName.ROLE_MANAGER) {
-			user.setReportTo(null);
-			user.setAnnualLeaveEntitled(0);
-			user.setAnnualLeaveLeft(0);
-			user.setCompensationLeft(0);
-			user.setMedicalLeaveLeft(0);
-		} else {
-			user.setReportTo(null);
-		}
-		if (oldUser.getAnnualLeaveEntitled() != user.getAnnualLeaveEntitled()) {
-			user.setAnnualLeaveLeft(user.getAnnualLeaveEntitled());
-		}
-		user.setId(id);
-		user.setPassword(oldUser.getPassword());
-		if (userRepository.save(user) != null)
-			return new ApiResponse(true, "User updated successfully");
-		else
-			return new ApiResponse(false, "User update failed");
+			// Handle role change
+			// -> Manager, initialize with 0
+			if (user.isRole(RoleName.ROLE_MANAGER)) {
+				user.setReportTo(null);
+				user.setAnnualLeaveEntitled(0);
+				user.setAnnualLeaveLeft(0);
+				user.setCompensationLeft(0);
+				user.setMedicalLeaveLeft(0);
+			}
+			// -> Staff, initialize with default leave
+			else {
+				if (user.isRole(RoleName.ROLE_ADMINISTRATIVE_STAFF)) {
+					user.setAnnualLeaveEntitled(administrativeStaffAnnualLeaveEntitled);
+					user.setAnnualLeaveLeft(administrativeStaffAnnualLeaveEntitled);
+					user.setMedicalLeaveLeft(medicalLeaveMax);
+				} else if (user.isRole(RoleName.ROLE_PROFESSIONAL_STAFF)) {
+					user.setAnnualLeaveEntitled(professionalStaffAnnualLeaveEntitled);
+					user.setAnnualLeaveLeft(professionalStaffAnnualLeaveEntitled);
+					user.setMedicalLeaveLeft(medicalLeaveMax);
+				}
+			}
+			// Calculate correct leave left
+			user.setAnnualLeaveLeft(user.getAnnualLeaveEntitled()
+					- leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.ANNUAL, LeaveStatus.APPROVED));
+			user.setMedicalLeaveLeft(medicalLeaveMax
+					- leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.MEDICAL, LeaveStatus.APPROVED));
+			// Give option for admin to set leave left different from default setting
+			if (oldUser.getAnnualLeaveEntitled() != user.getAnnualLeaveEntitled()) {
+				user.setAnnualLeaveLeft(user.getAnnualLeaveEntitled());
+			}
+			// Set id and password untouched
+			user.setId(id);
+			user.setPassword(oldUser.getPassword());
+			if (userRepository.save(user) != null)
+				return new ApiResponse(true, "User updated successfully");
+			else
+				return new ApiResponse(false, "User update failed");
+		} else
+			return new ApiResponse(false, "Cannot find user to be updated");
 	}
 
 	@Transactional
 	public List<User> getAll(RoleName role) {
+		// Get all manager
 		if (role == RoleName.ROLE_MANAGER) {
 			return userRepository.findAll().stream()
 					.filter(x -> x.getRoles().iterator().next().getName() == RoleName.ROLE_MANAGER)
 					.collect(Collectors.toList());
-		} else {
+		}
+		// Default action get all except admin
+		else {
 			return userRepository.findAll().stream()
 					.filter(x -> x.getRoles().iterator().next().getName() != RoleName.ROLE_ADMIN)
 					.collect(Collectors.toList());
 		}
-
 	}
 }

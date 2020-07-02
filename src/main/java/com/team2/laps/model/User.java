@@ -43,7 +43,7 @@ public class User {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    @Size(max = 15)
+    @Size(max = 40)
     private String name;
 
     @Size(max = 40)
@@ -54,12 +54,12 @@ public class User {
     @JsonIgnore
     private String password;
 
-    private int annualLeaveEntitled;
-    private int annualLeaveLeft;
-    private int compensationLeft;
+    private long annualLeaveEntitled;
+    private long annualLeaveLeft;
+    private long compensationLeft;
 
     @Max(60)
-    private int medicalLeaveLeft;
+    private long medicalLeaveLeft;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -79,6 +79,14 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Compensation> compensations = new HashSet<Compensation>();
 
+    @PreRemove
+    private void removeUser() {
+        roles.clear();
+        for (User user : subordinates) {
+            user.setReportTo(null);
+        }
+    }
+
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
@@ -93,11 +101,10 @@ public class User {
         this.roles = role;
     }
 
-    @PreRemove
-    private void removeUser() {
-        roles.clear();
-        for (User user : subordinates) {
-            user.setReportTo(null);
-        }
+    public boolean isRole(RoleName roleName) {
+        if (!this.getRoles().isEmpty())
+            return this.getRoles().iterator().next().getName() == roleName;
+        else
+            return false;
     }
 }

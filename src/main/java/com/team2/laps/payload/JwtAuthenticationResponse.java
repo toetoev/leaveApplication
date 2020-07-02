@@ -1,7 +1,5 @@
 package com.team2.laps.payload;
 
-import com.team2.laps.model.RoleName;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,9 +8,9 @@ import lombok.Setter;
 public class JwtAuthenticationResponse {
     private String accessToken;
     private String tokenType = "Bearer";
-    private RoleName roleName;
+    private String roleName;
 
-    public JwtAuthenticationResponse(String accessToken, RoleName roleName) {
+    public JwtAuthenticationResponse(String accessToken, String roleName) {
         this.accessToken = accessToken;
         this.roleName = roleName;
     }

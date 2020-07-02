@@ -2,7 +2,6 @@ package com.team2.laps.service;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -35,8 +34,10 @@ public class LeaveService {
     @Transactional
     public List<Leave> getLeaveByUser(boolean isManager) {
         User user = userService.getCurrentUser();
+        // Manager return subordinates leave record for approval
         if (isManager)
             return leaveRepository.findLeaveForApprovalBySubordinatesOrderByStartDate(user.getId());
+        // Staff return his/her current year record
         else
             return leaveRepository.findCurrentYearLeaveByUserOrderByStartDate(user.getId());
     }
@@ -45,6 +46,21 @@ public class LeaveService {
     public ApiResponse createOrUpdateLeave(Leave leave, boolean isManager) {
         String isValid = isValid(leave, isManager);
         if (isValid == "valid") {
+            if (leaveRepository.findById(leave.getId()).isPresent()) {
+                Leave oldLeave = leaveRepository.findById(leave.getId()).get();
+                if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
+                        && leave.getStatus() == LeaveStatus.APPROVED) {
+                    Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
+
+                    if (leave.getLeaveType() == LeaveType.ANNUAL) {
+                        leave.getUser().setAnnualLeaveLeft(oldLeave.getUser().getAnnualLeaveLeft() - duration.toDays());
+                    }
+                    if (leave.getLeaveType() == LeaveType.MEDICAL) {
+                        leave.getUser()
+                                .setMedicalLeaveLeft(oldLeave.getUser().getMedicalLeaveLeft() - duration.toDays());
+                    }
+                }
+            }
             if (leaveRepository.save(leave) != null)
                 return new ApiResponse(true, "Leave created or updated");
             else
@@ -55,21 +71,19 @@ public class LeaveService {
 
     @Transactional
     public ApiResponse deleteOrCancelLeave(String leaveId, LeaveStatus leaveStatus, boolean isManager) {
-        Optional<Leave> leave = leaveRepository.findById(leaveId);
         if (leaveRepository.findById(leaveId).isPresent()) {
-            Leave newLeave = leave.get();
-            if (isValidStatusChange(leaveId, leaveStatus, isManager)) {
-                newLeave.setStatus(leaveStatus);
-                if (leaveRepository.save(newLeave) != null)
+            Leave leave = leaveRepository.findById(leaveId).get();
+            if (isValidStatusChange(leave, isManager)) {
+                leave.setStatus(leaveStatus);
+                if (leaveRepository.save(leave) != null)
                     return new ApiResponse(true, "Leave status changed");
                 else
                     return new ApiResponse(false, "Leave status change failed");
             } else {
                 return new ApiResponse(false, "Invalid status change");
             }
-        } else {
+        } else
             return new ApiResponse(false, "Cannot find leave to be deleted");
-        }
     }
 
     @Transactional
@@ -90,7 +104,7 @@ public class LeaveService {
                 return "not enough leave left";
             }
         }
-        if (!isValidStatusChange(leave.getId(), leave.getStatus(), isManager))
+        if (!isValidStatusChange(leave, isManager))
             return "invalid status change";
         // Validate rejected reason
         if (leave.getStatus() == LeaveStatus.REJECTED && leave.getRejectReason() == null)
@@ -99,11 +113,12 @@ public class LeaveService {
     }
 
     @Transactional
-    public boolean isValidStatusChange(String id, LeaveStatus leaveStatus, boolean isManager) {
+    public boolean isValidStatusChange(Leave leave, boolean isManager) {
         // Validate status change
-        if (id != null) {
+        LeaveStatus leaveStatus = leave.getStatus();
+        if (leave.getId() != null) {
             boolean isStatusChangeValid = false;
-            Leave oldLeave = leaveRepository.findById(id).get();
+            Leave oldLeave = leaveRepository.findById(leave.getId()).get();
             if (oldLeave.getStatus() == leaveStatus)
                 return true;
             if (isManager) {
@@ -112,6 +127,17 @@ public class LeaveService {
                     isStatusChangeValid = true;
                 else
                     isStatusChangeValid = false;
+                if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
+                        && leaveStatus == LeaveStatus.APPROVED) {
+                    Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
+
+                    if (leave.getLeaveType() == LeaveType.ANNUAL) {
+                        isStatusChangeValid = oldLeave.getUser().getAnnualLeaveLeft() > duration.toDays();
+                    }
+                    if (leave.getLeaveType() == LeaveType.MEDICAL) {
+                        isStatusChangeValid = oldLeave.getUser().getMedicalLeaveLeft() > duration.toDays();
+                    }
+                }
             } else {
                 if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
                         && (leaveStatus == LeaveStatus.DELETED || leaveStatus == LeaveStatus.UPDATED))

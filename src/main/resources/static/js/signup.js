@@ -16,7 +16,7 @@ $("#submitSignUp").click(function (e) {
 		}),
 		success: function (res) {
 			console.log(res);
-			bootbox.alert(res.success ? "Sign Up Successfully" : res.message);
+			bootbox.alert(res.success ? "Signed Up Successfully" : res.message);
 		},
 	});
 });
