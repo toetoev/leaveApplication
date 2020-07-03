@@ -97,7 +97,6 @@ function initDataTable() {
 			},
 			{ data: "annualLeaveEntitled", title: "Annual Leave Entitled" },
 			{ data: "annualLeaveLeft", title: "Annual Leave Left" },
-			{ data: "compensationLeft", title: "Compensation Left (0.5 day)" },
 			{ data: "medicalLeaveLeft", title: "Medical Leave Left (60 max)" },
 			{ data: "id", title: "Actions" },
 		],
@@ -108,7 +107,7 @@ function initDataTable() {
 				className: "all text-center align-middle",
 			},
 			{
-				targets: [4, 5, 6, 7],
+				targets: [4, 5, 6],
 				className: "align-middle",
 			},
 			{
