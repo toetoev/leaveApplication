@@ -50,7 +50,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    // FIXME: change configuration accordingly to our project
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
