@@ -33,3 +33,5 @@ build/
 
 ### Mac ###
 .DS_STORE
+
+*.mdj
