@@ -151,16 +151,33 @@ function initDataTable() {
 				orderable: false,
 				className: "all text-center",
 				render: function (data, type, row, meta) {
+					const displayEditOrDelete =
+						row.status === ("APPLIED" || "UPDATED");
+					const displayCancel = row.status === "APPROVED";
+					row.status === ("APPLIED" || "UPDATED");
+					const displayEdit = row.status === ("APPLIED" || "UPDATED");
 					return `<div style="display:block">
-								<button onclick="edit_action(this, '${row.id}')" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal" style="margin:3px">
+								<button onclick="edit_action(this, '${
+									row.id
+								}')" type="button" class="btn btn-warning btn-sm" ${
+						displayEditOrDelete ? "" : "disabled"
+					} data-toggle="modal" data-target="#editModal" style="margin:3px">
 									<i class="fa fa-edit"></i> 
 										Edit
 								</button>
-								<button onclick="delete_action('${row.id}')" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal_delete" style="margin:3px">
+								<button onclick="delete_action('${
+									row.id
+								}')" type="button" class="btn btn-danger btn-sm" ${
+						displayEditOrDelete ? "" : "disabled"
+					} data-toggle="modal" data-target="#modal_delete" style="margin:3px">
 									<i class="fa fa-backspace"></i>
 										Delete
 								</button>
-								<button onclick="cancel_action('${row.id}')" type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_delete" style="margin:3px">
+								<button onclick="cancel_action('${
+									row.id
+								}')" type="button" class="btn btn-info btn-sm" ${
+						displayCancel ? "" : "disabled"
+					} data-toggle="modal" data-target="#modal_delete" style="margin:3px">
 									<i class="fa fa-ban"></i>
 										Cancel
 								</button>

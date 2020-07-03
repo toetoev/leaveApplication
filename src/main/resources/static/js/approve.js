@@ -110,12 +110,18 @@ function initDataTable() {
 				orderable: false,
 				className: "all text-center",
 				render: function (data, type, row, meta) {
+					const displayButton =
+						row.status === ("APPLIED" || "UPDATED");
 					return `<div style="display:block">
-								<button onclick="approve_action(this)" type="button" class="btn btn-success btn-sm" style="margin:3px">
+								<button onclick="approve_action(this)" type="button" class="btn btn-success btn-sm" ${
+									displayButton ? "" : "disabled"
+								} style="margin:3px">
 									<i class="fa fa-check"></i>
 										Approve
 								</button>
-								<button onclick="reject_action(this)" type="button" class="btn btn-info btn-sm" style="margin:3px">
+								<button onclick="reject_action(this)" type="button" class="btn btn-info btn-sm" ${
+									displayButton ? "" : "disabled"
+								} style="margin:3px">
 									<i class="fa fa-ban"></i>
 										Reject
 								</button>
