@@ -104,7 +104,8 @@ public class UserService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = tokenProvider.generateToken(authentication);
 		String roleName = authentication.getAuthorities().stream().iterator().next().getAuthority();
-		return new JwtAuthenticationResponse(jwt, roleName);
+		String name = authentication.getName();
+		return new JwtAuthenticationResponse(jwt, roleName, name);
 	}
 
 	@Transactional

@@ -13,6 +13,7 @@ $("#formSignIn").submit(function (e) {
 		contentType: "application/json",
 		success: function (res) {
 			localStorage.setItem("accessToken", res.accessToken);
+			localStorage.setItem("name", res.name);
 			switch (res.roleName) {
 				case "ROLE_MANAGER":
 					window.location = "/view/manager/approve";
