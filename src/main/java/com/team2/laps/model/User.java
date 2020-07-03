@@ -81,9 +81,6 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Leave> leaves = new HashSet<Leave>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Compensation> compensations = new HashSet<Compensation>();
-
     @PreRemove
     private void removeUser() {
         roles.clear();
