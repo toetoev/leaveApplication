@@ -82,6 +82,14 @@ function initDataTable() {
 			// },
 		},
 		columns: [
+			{
+				defaultContent: "",
+				className: "control",
+				orderable: false,
+				searchable: false,
+				sortable: false,
+				title: "Details",
+			},
 			{ data: "user.name", title: "Name" },
 			{ data: "leaveType", title: "Leave Type" },
 			{ data: "startDate", title: "Start Date" },
@@ -91,20 +99,9 @@ function initDataTable() {
 			{ data: "workDissemination", title: "Work Dissemination" },
 			{ data: "contactDetails", title: "Contact Details" },
 			{ data: "rejectReason", title: "Reject Reason" },
-			{ data: "id", title: "Actions" },
-		],
-		responsive: true,
-		columnDefs: [
 			{
-				targets: [0, 1, 2, 3],
-				className: "all text-center align-middle",
-			},
-			{
-				targets: [4, 5, 6, 7, 8],
-				className: "align-middle",
-			},
-			{
-				targets: -1,
+				data: "id",
+				title: "Actions",
 				defaultContent: "-",
 				searchable: false,
 				orderable: false,
@@ -113,20 +110,36 @@ function initDataTable() {
 					const displayButton =
 						row.status === ("APPLIED" || "UPDATED");
 					return `<div style="display:block">
-								<button onclick="approve_action(this)" type="button" class="btn btn-success btn-sm" ${
-									displayButton ? "" : "disabled"
-								} style="margin:3px">
-									<i class="fa fa-check"></i>
-										Approve
-								</button>
-								<button onclick="reject_action(this)" type="button" class="btn btn-info btn-sm" ${
-									displayButton ? "" : "disabled"
-								} style="margin:3px">
-									<i class="fa fa-ban"></i>
-										Reject
-								</button>
-							</div>`;
+							<button onclick="approve_action(this)" type="button" class="btn btn-success btn-sm" ${
+								displayButton ? "" : "disabled"
+							} style="margin:3px">
+								<i class="fa fa-check"></i>
+									Approve
+							</button>
+							<button onclick="reject_action(this)" type="button" class="btn btn-info btn-sm" ${
+								displayButton ? "" : "disabled"
+							} style="margin:3px">
+								<i class="fa fa-ban"></i>
+									Reject
+							</button>
+						</div>`;
 				},
+			},
+		],
+		responsive: {
+			details: {
+				type: "column",
+				target: "tr",
+			},
+		},
+		columnDefs: [
+			{
+				targets: [0, 1, 2, 3],
+				className: "all text-center align-middle",
+			},
+			{
+				targets: [4, 5, 6, 7, 8],
+				className: "align-middle",
 			},
 		],
 	});

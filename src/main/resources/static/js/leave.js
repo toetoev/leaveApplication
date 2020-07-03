@@ -124,6 +124,14 @@ function initDataTable() {
 			contentType: "application/json",
 		},
 		columns: [
+			{
+				defaultContent: "",
+				className: "control",
+				orderable: false,
+				searchable: false,
+				sortable: false,
+				title: "Details",
+			},
 			{ data: "leaveType", title: "Leave Type" },
 			{ data: "startDate", title: "Start Date" },
 			{ data: "endDate", title: "End Date" },
@@ -132,20 +140,9 @@ function initDataTable() {
 			{ data: "workDissemination", title: "Work Dissemination" },
 			{ data: "contactDetails", title: "Contact Details" },
 			{ data: "rejectReason", title: "Reject Reason" },
-			{ data: "id", title: "Actions" },
-		],
-		responsive: true,
-		columnDefs: [
 			{
-				targets: [0, 1, 2, 3],
-				className: "all text-center align-middle",
-			},
-			{
-				targets: [4, 5, 6, 7, 8],
-				className: "align-middle",
-			},
-			{
-				targets: -1,
+				data: "id",
+				title: "Actions",
 				defaultContent: "-",
 				searchable: false,
 				orderable: false,
@@ -157,32 +154,48 @@ function initDataTable() {
 					row.status === ("APPLIED" || "UPDATED");
 					const displayEdit = row.status === ("APPLIED" || "UPDATED");
 					return `<div style="display:block">
-								<button onclick="edit_action(this, '${
-									row.id
-								}')" type="button" class="btn btn-warning btn-sm" ${
+							<button onclick="edit_action(this, '${
+								row.id
+							}')" type="button" class="btn btn-warning btn-sm" ${
 						displayEditOrDelete ? "" : "disabled"
 					} data-toggle="modal" data-target="#editModal" style="margin:3px">
-									<i class="fa fa-edit"></i> 
-										Edit
-								</button>
-								<button onclick="delete_action('${
-									row.id
-								}')" type="button" class="btn btn-danger btn-sm" ${
+								<i class="fa fa-edit"></i> 
+									Edit
+							</button>
+							<button onclick="delete_action('${
+								row.id
+							}')" type="button" class="btn btn-danger btn-sm" ${
 						displayEditOrDelete ? "" : "disabled"
 					} data-toggle="modal" data-target="#modal_delete" style="margin:3px">
-									<i class="fa fa-backspace"></i>
-										Delete
-								</button>
-								<button onclick="cancel_action('${
-									row.id
-								}')" type="button" class="btn btn-info btn-sm" ${
+								<i class="fa fa-backspace"></i>
+									Delete
+							</button>
+							<button onclick="cancel_action('${
+								row.id
+							}')" type="button" class="btn btn-info btn-sm" ${
 						displayCancel ? "" : "disabled"
 					} data-toggle="modal" data-target="#modal_delete" style="margin:3px">
-									<i class="fa fa-ban"></i>
-										Cancel
-								</button>
-							</div>`;
+								<i class="fa fa-ban"></i>
+									Cancel
+							</button>
+						</div>`;
 				},
+			},
+		],
+		responsive: {
+			details: {
+				type: "column",
+				target: "tr",
+			},
+		},
+		columnDefs: [
+			{
+				targets: [0, 1, 2, 3],
+				className: "all text-center align-middle",
+			},
+			{
+				targets: [4, 5, 6, 7, 8],
+				className: "align-middle",
 			},
 		],
 	});
