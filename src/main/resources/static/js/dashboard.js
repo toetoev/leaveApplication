@@ -9,7 +9,10 @@ $(document).ready(function () {
 	if (localStorage.getItem("accessToken") == null)
 		window.location = "/view/auth";
 	else if (localStorage.getItem("name") != null) {
-		$("#username").text("Hello, " + localStorage.getItem("name"));
+		const name = localStorage.getItem("name");
+		$("#username").text(
+			"Hello, " + name.charAt(0).toUpperCase() + name.slice(1)
+		);
 	}
 });
 
