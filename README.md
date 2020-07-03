@@ -18,7 +18,13 @@ mvn spring-boot:run
 
 ## Key Features
 
+### Backend
+
 -   Using Spring Boot and thymeleaf, a typical SSR application.
+
+-   Add Spring Security support, using Jwt role-based authentication and authorization to secure API
+
+### Frontend
 
 -   Ajax is fully used for consuming RESTful API, an example for modern web development which means separate frontend and backend
 
