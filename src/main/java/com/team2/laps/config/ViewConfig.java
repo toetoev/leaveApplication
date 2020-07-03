@@ -9,10 +9,8 @@ public class ViewConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/view/auth").setViewName("/auth/auth");
-        registry.addViewController("/view/dashboard").setViewName("/dashboard/home");
         registry.addViewController("/view/staff/submit").setViewName("/dashboard/staff/submit");
         registry.addViewController("/view/staff/leave").setViewName("/dashboard/staff/leave");
-        registry.addViewController("/view/staff/compensation").setViewName("/dashboard/staff/compensation");
         registry.addViewController("/view/admin/signup").setViewName("/dashboard/admin/signup");
         registry.addViewController("/view/admin/manage").setViewName("/dashboard/admin/manage");
         registry.addViewController("/view/manager/approve").setViewName("/dashboard/manager/approve");
