@@ -49,68 +49,71 @@ function edit_action(this_el, item_id) {
 	$("#contact-details").val(row_data.contactDetails);
 }
 
-function delete_action(item_id) {
-	bootbox.confirm({
-		message: "Are you sure you want to delete application?",
-		buttons: {
-			confirm: {
-				label: "Yes",
-				className: "btn-md btn-success",
-			},
-			cancel: {
-				label: "No",
-				className: "btn-md btn-danger",
-			},
+function approve_action(this_el) {
+	var tr_el = this_el.closest("tr");
+	var row = dataTable.row(tr_el);
+	var row_data = row.data();
+	$.ajax({
+		type: "POST",
+		contentType: "application/json",
+		dataType: "json",
+		url: "/api/leaves",
+		headers: {
+			Authorization: "Bearer " + localStorage.getItem("accessToken"),
 		},
-		callback: function (result) {
-			if (result) {
-				$.ajax({
-					type: "DELETE",
-					url: `/api/leaves/${item_id}/DELETED`,
-					headers: {
-						Authorization:
-							"Bearer " + localStorage.getItem("accessToken"),
-					},
-					contentType: "application/json",
-					success: function (res) {
-						console.log(res);
-						dataTable.ajax.reload();
-					},
-				});
-			}
+		data: JSON.stringify({
+			id: row_data.id,
+			startDate: row_data.startDate,
+			endDate: row_data.endDate,
+			leaveType: row_data.leaveType,
+			reason: row_data.reason,
+			workDissemination: row_data.workDissemination,
+			contactDetails: row_data.contactDetails,
+			status: "APPROVED",
+		}),
+		success: function (res) {
+			console.log(res);
+			dataTable.ajax.reload();
+			bootbox.alert("Leave Approved");
 		},
 	});
 }
 
-function cancel_action(item_id) {
-	bootbox.confirm({
-		message: "Are you sure you want to cancel application?",
-		buttons: {
-			confirm: {
-				label: "Yes",
-				className: "btn-success",
-			},
-			cancel: {
-				label: "No",
-				className: "btn-danger",
-			},
-		},
+function reject_action(this_el) {
+	bootbox.prompt({
+		title: "Please write the reason for rejection.",
+		centerVertical: true,
 		callback: function (result) {
-			if (result) {
-				$.ajax({
-					type: "DELETE",
-					url: `/api/leaves/${item_id}/CANCELED`,
-					headers: {
-						Authorization:
-							"Bearer " + localStorage.getItem("accessToken"),
-					},
-					contentType: "application/json",
-					success: function (res) {
-						console.log(res);
-						dataTable.ajax.reload();
-					},
-				});
-			}
+			console.log(result);
+			var tr_el = this_el.closest("tr");
+			var row = dataTable.row(tr_el);
+			var row_data = row.data();
+			$.ajax({
+				type: "POST",
+				contentType: "application/json",
+				dataType: "json",
+				url: "/api/leaves",
+				headers: {
+					Authorization:
+						"Bearer " + localStorage.getItem("accessToken"),
+				},
+				data: JSON.stringify({
+					id: row_data.id,
+					startDate: row_data.startDate,
+					endDate: row_data.endDate,
+					leaveType: row_data.leaveType,
+					reason: row_data.reason,
+					workDissemination: row_data.workDissemination,
+					contactDetails: row_data.contactDetails,
+					status: "REJECTED",
+					rejectReason: result,
+				}),
+				success: function (res) {
+					console.log(res);
+					dataTable.ajax.reload();
+					bootbox.alert("Leave Rejected");
+				},
+			});
 		},
 	});
 }
@@ -123,8 +126,12 @@ function initDataTable() {
 				Authorization: "Bearer " + localStorage.getItem("accessToken"),
 			},
 			contentType: "application/json",
+			// success: (res) => {
+			// 	console.log(res);
+			// },
 		},
 		columns: [
+			{ data: "user.name", title: "Name" },
 			{ data: "leaveType", title: "Leave Type" },
 			{ data: "startDate", title: "Start Date" },
 			{ data: "endDate", title: "End Date" },
@@ -153,17 +160,13 @@ function initDataTable() {
 				className: "all text-center",
 				render: function (data, type, row, meta) {
 					return `<div style="display:block">
-								<button onclick="edit_action(this, '${row.id}')" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal" style="margin:3px">
-									<i class="fa fa-edit"></i> 
-										Edit
+								<button onclick="approve_action(this)" type="button" class="btn btn-success btn-sm" style="margin:3px">
+									<i class="fa fa-check"></i>
+										Approve
 								</button>
-								<button onclick="delete_action('${row.id}')" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal_delete" style="margin:3px">
-									<i class="fa fa-backspace"></i>
-										Delete
-								</button>
-								<button onclick="cancel_action('${row.id}')" type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal_delete" style="margin:3px">
+								<button onclick="reject_action(this)" type="button" class="btn btn-info btn-sm" style="margin:3px">
 									<i class="fa fa-ban"></i>
-										Cancel
+										Reject
 								</button>
 							</div>`;
 				},

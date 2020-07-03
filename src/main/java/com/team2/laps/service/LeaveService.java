@@ -48,17 +48,26 @@ public class LeaveService {
     public ApiResponse createOrUpdateLeave(Leave leave, boolean isManager) {
         String isValid = isValid(leave, isManager);
         if (isValid == "valid") {
-            if (leaveRepository.findById(leave.getId()).isPresent()) {
+            if (leave.getId() != null && leaveRepository.findById(leave.getId()).isPresent()) {
                 Leave oldLeave = leaveRepository.findById(leave.getId()).get();
+                leave.setUser(oldLeave.getUser());
                 if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
                         && leave.getStatus() == LeaveStatus.APPROVED) {
-                    Duration duration = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
-                    if (leave.getLeaveType() == LeaveType.ANNUAL) {
-                        leave.getUser().setAnnualLeaveLeft(oldLeave.getUser().getAnnualLeaveLeft() - duration.toDays());
-                    }
-                    if (leave.getLeaveType() == LeaveType.MEDICAL) {
-                        leave.getUser()
-                                .setMedicalLeaveLeft(oldLeave.getUser().getMedicalLeaveLeft() - duration.toDays());
+                    leave.setUser(oldLeave.getUser());
+                    if (enoughLeaveLeft(leave)) {
+                        Duration duration = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
+                        if (leave.getLeaveType() == LeaveType.ANNUAL) {
+                            logger.error(String.valueOf(oldLeave.getUser().getAnnualLeaveLeft()));
+                            logger.error(String.valueOf(duration.toDays()));
+                            leave.getUser()
+                                    .setAnnualLeaveLeft(oldLeave.getUser().getAnnualLeaveLeft() - duration.toDays());
+                        }
+                        if (leave.getLeaveType() == LeaveType.MEDICAL) {
+                            leave.getUser()
+                                    .setMedicalLeaveLeft(oldLeave.getUser().getMedicalLeaveLeft() - duration.toDays());
+                        }
+                    } else {
+                        return new ApiResponse(false, "not enough leave left");
                     }
                 }
             }
@@ -93,18 +102,7 @@ public class LeaveService {
         if (leave.getStartDate().compareTo(leave.getEndDate()) >= 0) {
             return "invalid date";
         }
-        // Validate left time for leave
-        if (leave.getLeaveType() == LeaveType.ANNUAL) {
-            Duration duration = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
-            if (duration.toDays() > leave.getUser().getAnnualLeaveLeft()) {
-                return "not enough leave left";
-            }
-        } else if (leave.getLeaveType() == LeaveType.MEDICAL) {
-            Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
-            if (duration.toDays() > leave.getUser().getMedicalLeaveLeft()) {
-                return "not enough leave left";
-            }
-        }
+        // Validate status change
         if (!isValidStatusChange(leave, isManager))
             return "invalid status change";
         // Validate rejected reason
@@ -117,7 +115,7 @@ public class LeaveService {
     public boolean isValidStatusChange(Leave leave, boolean isManager) {
         // Validate status change
         LeaveStatus leaveStatus = leave.getStatus();
-        if (leave.getId() != null) {
+        if (leave.getId() != null && leaveRepository.findById(leave.getId()).isPresent()) {
             boolean isStatusChangeValid = false;
             Leave oldLeave = leaveRepository.findById(leave.getId()).get();
             if (oldLeave.getStatus() == leaveStatus)
@@ -165,8 +163,8 @@ public class LeaveService {
         long days = Duration.between(startDate, endDate).toDays();
         long result = 0;
         if (days <= 14) {
-            result = (days % 7) * 5;
-            for (int i = 0; i < days / 7; i++) {
+            result = (days / 7) * 5;
+            for (int i = 0; i < days % 7; i++) {
                 if (startDate.plusDays(i).getDayOfWeek() != DayOfWeek.SATURDAY
                         && startDate.plusDays(i).getDayOfWeek() != DayOfWeek.SUNDAY)
                     result++;
@@ -174,5 +172,24 @@ public class LeaveService {
             return Duration.ofDays(result);
         } else
             return Duration.ofDays(days);
+    }
+
+    public boolean enoughLeaveLeft(Leave leave) {
+        if (leave.getLeaveType() == LeaveType.ANNUAL) {
+            Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
+            logger.error(String.valueOf(duration.toDays()));
+            logger.error(String.valueOf(leave.getUser().getAnnualLeaveLeft()));
+            if (duration.toDays() > leave.getUser().getAnnualLeaveLeft())
+                return false;
+            else
+                return true;
+        } else if (leave.getLeaveType() == LeaveType.MEDICAL) {
+            Duration duration = Duration.between(leave.getStartDate(), leave.getEndDate());
+            if (duration.toDays() > leave.getUser().getMedicalLeaveLeft())
+                return false;
+            else
+                return true;
+        }
+        return false;
     }
 }

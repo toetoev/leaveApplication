@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.team2.laps.exception.AppException;
-import com.team2.laps.model.LeaveStatus;
 import com.team2.laps.model.LeaveType;
 import com.team2.laps.model.Role;
 import com.team2.laps.model.RoleName;
@@ -141,10 +140,10 @@ public class UserService {
 				}
 			}
 			// Calculate correct leave left
-			user.setAnnualLeaveLeft(user.getAnnualLeaveEntitled()
-					- leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.ANNUAL, LeaveStatus.APPROVED));
-			user.setMedicalLeaveLeft(medicalLeaveMax
-					- leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.MEDICAL, LeaveStatus.APPROVED));
+			user.setAnnualLeaveLeft(
+					user.getAnnualLeaveEntitled() - leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.ANNUAL));
+			user.setMedicalLeaveLeft(
+					medicalLeaveMax - leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.MEDICAL));
 			// Give option for admin to set leave left different from default setting
 			if (oldUser.getAnnualLeaveEntitled() != user.getAnnualLeaveEntitled()) {
 				user.setAnnualLeaveLeft(user.getAnnualLeaveEntitled());
