@@ -93,12 +93,12 @@ function initDataTable() {
 			},
 			{
 				data: "reportTo.name",
-				title: "Reports To",
+				title: "Report To",
 				defaultContent: "",
 			},
 			{ data: "annualLeaveEntitled", title: "Annual Leave Entitled" },
 			{ data: "annualLeaveLeft", title: "Annual Leave Left" },
-			{ data: "medicalLeaveLeft", title: "Medical Leave Left (60 max)" },
+			{ data: "medicalLeaveLeft", title: "Medical Leave Left" },
 			{ data: "id", title: "Actions" },
 		],
 		responsive: true,
@@ -178,6 +178,9 @@ $("#saveEdit").click(function (e) {
 			console.log(res);
 			dataTable.ajax.reload();
 			$("#editModal").modal("hide");
+		},
+		error: function (res) {
+			console.log(res);
 		},
 	});
 });
