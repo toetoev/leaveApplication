@@ -17,17 +17,20 @@ $.fn.datetimepicker.Constructor.Default = $.extend(
 		locale: "sg",
 	}
 );
-// FIXME: startdate default value should not be weekend
+
 $(function () {
+	let num = 0;
+	if (moment().isoWeekday() === 6) num = 2;
+	if (moment().isoWeekday() === 7) num = 1;
 	$("#startDatetimepicker").datetimepicker({
 		daysOfWeekDisabled: [0, 6],
-		minDate: moment().add(1, "days"),
-		defaultDate: moment().add(1, "days"),
+		minDate: moment().add(num, "days"),
+		defaultDate: moment().add(num, "days"),
 		useCurrent: false,
 	});
 	$("#endDatetimepicker").datetimepicker({
 		daysOfWeekDisabled: [0, 6],
-		defaultDate: moment().add(2, "days"),
+		defaultDate: moment().add(num + 1, "days"),
 		useCurrent: false,
 	});
 	$("#startDatetimepicker").on("change.datetimepicker", function (e) {
