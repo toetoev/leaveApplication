@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -46,9 +47,11 @@ public class User {
     private String id;
 
     @Size(max = 40)
+    @NotBlank
     private String name;
 
     @Size(max = 40)
+    @NotBlank
     @Email
     private String email;
 

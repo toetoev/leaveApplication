@@ -1,6 +1,6 @@
 package com.team2.laps.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -40,10 +40,10 @@ public class Leave {
     private LeaveType leaveType;
 
     @JsonFormat(pattern = "MM/dd/yyyy")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @JsonFormat(pattern = "MM/dd/yyyy")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @NotBlank
     private String reason;

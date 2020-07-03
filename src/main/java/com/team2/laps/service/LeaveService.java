@@ -2,7 +2,7 @@ package com.team2.laps.service;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -156,7 +156,7 @@ public class LeaveService {
             return false;
     }
 
-    public Duration calculateAnnualLeaveDuration(LocalDateTime startDate, LocalDateTime endDate) {
+    public Duration calculateAnnualLeaveDuration(LocalDate startDate, LocalDate endDate) {
         long days = Duration.between(startDate, endDate).toDays();
         long result = 0;
         if (days <= 14) {
