@@ -2,6 +2,7 @@ package com.team2.laps.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -20,6 +21,8 @@ import com.team2.laps.repository.RoleRepository;
 import com.team2.laps.repository.UserRepository;
 import com.team2.laps.security.JwtTokenProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +34,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+	private static final Logger logger = LoggerFactory.getLogger(LeaveService.class);
+
 	@Autowired
 	LeaveRepository leaveRepository;
 
@@ -120,34 +125,40 @@ public class UserService {
 			}
 			// Handle role change
 			// -> Manager, initialize with 0
-			if (user.isRole(RoleName.ROLE_MANAGER)) {
-				user.setReportTo(null);
-				user.setAnnualLeaveEntitled(0);
-				user.setAnnualLeaveLeft(0);
-				user.setCompensationLeft(0);
-				user.setMedicalLeaveLeft(0);
-			}
-			// -> Staff, initialize with default leave
-			else {
-				if (user.isRole(RoleName.ROLE_ADMINISTRATIVE_STAFF)) {
-					user.setAnnualLeaveEntitled(administrativeStaffAnnualLeaveEntitled);
-					user.setAnnualLeaveLeft(administrativeStaffAnnualLeaveEntitled);
-					user.setMedicalLeaveLeft(medicalLeaveMax);
-				} else if (user.isRole(RoleName.ROLE_PROFESSIONAL_STAFF)) {
-					user.setAnnualLeaveEntitled(professionalStaffAnnualLeaveEntitled);
-					user.setAnnualLeaveLeft(professionalStaffAnnualLeaveEntitled);
-					user.setMedicalLeaveLeft(medicalLeaveMax);
+			if (!oldUser.isRole(user.getRoles().iterator().next().getName())) {
+				if (user.isRole(RoleName.ROLE_MANAGER)) {
+					user.setReportTo(null);
+					user.setAnnualLeaveEntitled(0);
+					user.setAnnualLeaveLeft(0);
+					user.setCompensationLeft(0);
+					user.setMedicalLeaveLeft(0);
+				}
+				// -> Staff, initialize with default leave
+				else {
+					if (user.isRole(RoleName.ROLE_ADMINISTRATIVE_STAFF)) {
+						user.setAnnualLeaveEntitled(administrativeStaffAnnualLeaveEntitled);
+						user.setAnnualLeaveLeft(administrativeStaffAnnualLeaveEntitled);
+						user.setMedicalLeaveLeft(medicalLeaveMax);
+					} else if (user.isRole(RoleName.ROLE_PROFESSIONAL_STAFF)) {
+						user.setAnnualLeaveEntitled(professionalStaffAnnualLeaveEntitled);
+						user.setAnnualLeaveLeft(professionalStaffAnnualLeaveEntitled);
+						user.setMedicalLeaveLeft(medicalLeaveMax);
+					}
+					if (oldUser.isRole(RoleName.ROLE_MANAGER)) {
+						Set<User> subordinates = oldUser.getSubordinates();
+						subordinates.forEach(x -> x.setReportTo(null));
+						user.setSubordinates(subordinates);
+					}
 				}
 			}
-			// Calculate correct leave left
-			user.setAnnualLeaveLeft(
-					user.getAnnualLeaveEntitled() - leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.ANNUAL));
-			user.setMedicalLeaveLeft(
-					medicalLeaveMax - leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.MEDICAL));
 			// Give option for admin to set leave left different from default setting
 			if (oldUser.getAnnualLeaveEntitled() != user.getAnnualLeaveEntitled()) {
 				user.setAnnualLeaveLeft(user.getAnnualLeaveEntitled());
 			}
+			user.setAnnualLeaveLeft(user.getAnnualLeaveEntitled()
+					- leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.ANNUAL.ordinal()));
+			user.setMedicalLeaveLeft(
+					medicalLeaveMax - leaveRepository.countCurrentYearLeaveUsed(id, LeaveType.MEDICAL.ordinal()));
 			// Set id and password untouched
 			user.setId(id);
 			user.setPassword(oldUser.getPassword());
