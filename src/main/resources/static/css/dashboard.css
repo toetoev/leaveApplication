@@ -1,5 +1,5 @@
 body {
-	font-size: 0.875rem;
+	font-size: 1rem;
 }
 
 .feather {
@@ -104,4 +104,16 @@ body {
 
 .hide {
 	visibility: hidden;
+}
+
+.bg-lightblue {
+	background-color: rgb(47, 138, 241);
+}
+
+.active {
+	color: rgb(47, 138, 241) !important;
+}
+
+.brand {
+	box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1) !important;
 }

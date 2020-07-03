@@ -116,7 +116,7 @@ function initDataTable() {
 				className: "all text-center",
 				render: function (data, type, row, meta) {
 					return `<div style="display:block">
-							<button onclick="edit_action(this, '${row.id}')" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal" style="margin:3px">
+							<button onclick="edit_action(this, '${row.id}')" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal" style="margin:3px">
 								<i class="fa fa-edit"></i> 
 									Edit
 							</button>
@@ -136,12 +136,12 @@ function initDataTable() {
 		},
 		columnDefs: [
 			{
-				targets: [0, 1, 2, 3],
+				targets: [0, 1, 2, 3, 4],
 				className: "all text-center align-middle",
 			},
 			{
-				targets: [4, 5, 6],
-				className: "align-middle",
+				targets: [5, 6, 7, 8],
+				className: "text-center align-middle",
 			},
 		],
 	});

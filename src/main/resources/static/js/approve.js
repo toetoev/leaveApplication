@@ -108,7 +108,7 @@ function initDataTable() {
 				className: "all text-center",
 				render: function (data, type, row, meta) {
 					const displayButton =
-						row.status === ("APPLIED" || "UPDATED");
+						row.status === "APPLIED" || row.status === "UPDATED";
 					return `<div style="display:block">
 							<button onclick="approve_action(this)" type="button" class="btn btn-success btn-sm" ${
 								displayButton ? "" : "disabled"

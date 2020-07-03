@@ -149,14 +149,12 @@ function initDataTable() {
 				className: "all text-center",
 				render: function (data, type, row, meta) {
 					const displayEditOrDelete =
-						row.status === ("APPLIED" || "UPDATED");
+						row.status === "APPLIED" || row.status === "UPDATED";
 					const displayCancel = row.status === "APPROVED";
-					row.status === ("APPLIED" || "UPDATED");
-					const displayEdit = row.status === ("APPLIED" || "UPDATED");
 					return `<div style="display:block">
 							<button onclick="edit_action(this, '${
 								row.id
-							}')" type="button" class="btn btn-warning btn-sm" ${
+							}')" type="button" class="btn btn-primary btn-sm" ${
 						displayEditOrDelete ? "" : "disabled"
 					} data-toggle="modal" data-target="#editModal" style="margin:3px">
 								<i class="fa fa-edit"></i> 
