@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -38,12 +39,13 @@ public class Leave {
     @Enumerated
     private LeaveType leaveType;
 
-    @JsonFormat(pattern = "MM/dd/yyyy HH")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     private LocalDateTime startDate;
 
-    @JsonFormat(pattern = "MM/dd/yyyy HH")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     private LocalDateTime endDate;
 
+    @NotBlank
     private String reason;
 
     private String workDissemination;
