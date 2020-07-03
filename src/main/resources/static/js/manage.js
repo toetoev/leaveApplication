@@ -41,7 +41,7 @@ function edit_action(this_el, item_id) {
 
 function delete_action(item_id) {
 	bootbox.confirm({
-		message: "Are you sure you want to delete application?",
+		message: "Are you sure you want to delete this employee?",
 		buttons: {
 			confirm: {
 				label: "Yes",
@@ -85,7 +85,11 @@ function initDataTable() {
 		columns: [
 			{ data: "name", title: "Name" },
 			{ data: "email", title: "Email" },
-			{ data: "roles[0].name", title: "Role" },
+			{
+				data: "roles[0].name",
+				title: "Role",
+				render: (data, type, row) => roleValueTransformer(data),
+			},
 			{
 				data: "reportTo.name",
 				title: "Reports To",
