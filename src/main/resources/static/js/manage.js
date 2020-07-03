@@ -5,8 +5,6 @@ function edit_action(this_el, item_id) {
 	var row_data = row.data();
 	$("#item_id").val(item_id);
 	$("#item_role").val(row_data.roles[0].name);
-	console.log(row_data);
-
 	$("#name").val(row_data.name);
 	$("#email").val(row_data.email);
 	if (row_data.roles[0].name === "ROLE_MANAGER") {
@@ -24,17 +22,17 @@ function edit_action(this_el, item_id) {
 			},
 			contentType: "application/json",
 			success: function (res) {
-				console.log(res);
-
 				$("#report-to").empty();
 				for (let i = 0; i < res.data.length; i++) {
 					$("#report-to").append(
 						`<option value="${res.data[i].id}">${res.data[i].name}</option>`
 					);
+					if (res.data[i].name === row_data.reportTo.name) {
+						$("#report-to").val(res.data[i].id);
+					}
 				}
 			},
 		});
-		$("#report-to").val(row_data.reportTo);
 	}
 	$("#role").val(row_data.roles[0].name);
 }
