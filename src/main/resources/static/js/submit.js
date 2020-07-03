@@ -13,22 +13,21 @@ $.fn.datetimepicker.Constructor.Default = $.extend(
 			clear: "fa fa-trash",
 			close: "fa fa-times",
 		},
-		format: "MM/DD/YYYY HH",
-		enabledHours: [8, 13],
+		format: "MM/DD/YYYY",
 		locale: "sg",
 	}
 );
-
+// FIXME: startdate default value should not be weekend
 $(function () {
 	$("#startDatetimepicker").datetimepicker({
 		daysOfWeekDisabled: [0, 6],
-		minDate: moment().add(1, "days").set("hour", 8),
-		defaultDate: moment().add(1, "days").set("hour", 8),
+		minDate: moment().add(1, "days"),
+		defaultDate: moment().add(1, "days"),
 		useCurrent: false,
 	});
 	$("#endDatetimepicker").datetimepicker({
 		daysOfWeekDisabled: [0, 6],
-		defaultDate: moment().add(2, "days").set("hour", 8),
+		defaultDate: moment().add(2, "days"),
 		useCurrent: false,
 	});
 	$("#startDatetimepicker").on("change.datetimepicker", function (e) {
@@ -52,10 +51,10 @@ $("#submitLeave").click(function (e) {
 		data: JSON.stringify({
 			startDate: $("#startDatetimepicker")
 				.datetimepicker("date")
-				.format("MM/DD/YYYY HH"),
+				.format("MM/DD/YYYY"),
 			endDate: $("#endDatetimepicker")
 				.datetimepicker("date")
-				.format("MM/DD/YYYY HH"),
+				.format("MM/DD/YYYY"),
 			leaveType: $("#leave-type").val(),
 			reason: $("#reason").val(),
 			workDissemination: $("#work-dissemination").val(),

@@ -19,22 +19,21 @@ function edit_action(this_el, item_id) {
 				clear: "fa fa-trash",
 				close: "fa fa-times",
 			},
-			format: "MM/DD/YYYY HH",
-			enabledHours: [8, 13],
+			format: "MM/DD/YYYY",
 			locale: "sg",
 		}
 	);
 
 	$("#startDatetimepicker").datetimepicker({
 		daysOfWeekDisabled: [0, 6],
-		minDate: moment(row_data.startDate, "MM/DD/YYYY HH"),
-		defaultDate: moment(row_data.startDate, "MM/DD/YYYY HH"),
-		format: "MM/DD/YYYY HH",
+		minDate: moment(row_data.startDate, "MM/DD/YYYY"),
+		defaultDate: moment(row_data.startDate, "MM/DD/YYYY"),
+		format: "MM/DD/YYYY",
 	});
 	$("#endDatetimepicker").datetimepicker({
 		daysOfWeekDisabled: [0, 6],
-		defaultDate: moment(row_data.endDate, "MM/DD/YYYY HH"),
-		format: "MM/DD/YYYY HH",
+		defaultDate: moment(row_data.endDate, "MM/DD/YYYY"),
+		format: "MM/DD/YYYY",
 	});
 	$("#startDatetimepicker").on("change.datetimepicker", function (e) {
 		$("#endDatetimepicker").datetimepicker("minDate", e.date);
@@ -192,10 +191,10 @@ $("#saveEdit").click(function (e) {
 			id: $("#item_id").val(),
 			startDate: $("#startDatetimepicker")
 				.datetimepicker("date")
-				.format("MM/DD/YYYY HH"),
+				.format("MM/DD/YYYY"),
 			endDate: $("#endDatetimepicker")
 				.datetimepicker("date")
-				.format("MM/DD/YYYY HH"),
+				.format("MM/DD/YYYY"),
 			leaveType: $("#leave-type").val(),
 			reason: $("#reason").val(),
 			workDissemination: $("#work-dissemination").val(),

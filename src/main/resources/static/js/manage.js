@@ -23,13 +23,16 @@ function edit_action(this_el, item_id) {
 			contentType: "application/json",
 			success: function (res) {
 				$("#report-to").empty();
+				$("#report-to").append(
+					`<option value="" disabled selected>Select your manager</option>`
+				);
 				for (let i = 0; i < res.data.length; i++) {
 					$("#report-to").append(
 						`<option value="${res.data[i].id}">${res.data[i].name}</option>`
 					);
-					if (res.data[i].name === row_data.reportTo.name) {
-						$("#report-to").val(res.data[i].id);
-					}
+					if (row_data.reportTo != null)
+						if (res.data[i].name === row_data.reportTo.name)
+							$("#report-to").val(res.data[i].id);
 				}
 			},
 		});
