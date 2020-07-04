@@ -5,7 +5,6 @@ import javax.validation.Valid;
 
 import com.team2.laps.model.RoleName;
 import com.team2.laps.model.User;
-import com.team2.laps.payload.ApiResponse;
 import com.team2.laps.payload.LoginRequest;
 import com.team2.laps.payload.SignUpRequest;
 import com.team2.laps.service.UserService;
@@ -41,13 +40,13 @@ public class UserController {
 	@GetMapping("/{role}")
 	@RolesAllowed("ROLE_ADMIN")
 	public ResponseEntity<?> getAllManagers(@PathVariable RoleName role) {
-		return ResponseEntity.ok(new ApiResponse(userService.getAll(role)));
+		return ResponseEntity.ok(userService.getAll(role));
 	}
 
 	@GetMapping
 	@RolesAllowed("ROLE_ADMIN")
 	public ResponseEntity<?> getAllUsers() {
-		return ResponseEntity.ok(new ApiResponse(userService.getAll(null)));
+		return ResponseEntity.ok(userService.getAll(null));
 	}
 
 	@DeleteMapping("/{id}")

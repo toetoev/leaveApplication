@@ -1,7 +1,6 @@
 package com.team2.laps.service;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -172,18 +171,18 @@ public class UserService {
 	}
 
 	@Transactional
-	public List<User> getAll(RoleName role) {
+	public ApiResponse getAll(RoleName role) {
 		// Get all manager
 		if (role == RoleName.ROLE_MANAGER) {
-			return userRepository.findAll().stream()
+			return new ApiResponse(userRepository.findAll().stream()
 					.filter(x -> x.getRoles().iterator().next().getName() == RoleName.ROLE_MANAGER)
-					.collect(Collectors.toList());
+					.collect(Collectors.toList()));
 		}
 		// Default action get all except admin
 		else {
-			return userRepository.findAll().stream()
+			return new ApiResponse(userRepository.findAll().stream()
 					.filter(x -> x.getRoles().iterator().next().getName() != RoleName.ROLE_ADMIN)
-					.collect(Collectors.toList());
+					.collect(Collectors.toList()));
 		}
 	}
 }

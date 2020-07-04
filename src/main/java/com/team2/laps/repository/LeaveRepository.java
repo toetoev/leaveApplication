@@ -14,7 +14,7 @@ public interface LeaveRepository extends JpaRepository<Leave, String> {
     @Query(value = "SELECT * FROM leaves WHERE YEAR(start_date) = YEAR(CURDATE()) AND YEAR(end_date) = YEAR(CURDATE()) AND user_id = :id ORDER BY start_date", nativeQuery = true)
     List<Leave> findCurrentYearLeaveByUserOrderByStartDate(@Param("id") String id);
 
-    @Query(value = "SELECT leaves.* FROM leaves, users WHERE leaves.user_id = users.id AND start_date >= CURDATE() AND report_to = :id ORDER BY start_date", nativeQuery = true)
+    @Query(value = "SELECT leaves.* FROM leaves, users WHERE leaves.user_id = users.id AND start_date >= CURDATE() AND report_to = :id ORDER BY status, start_date", nativeQuery = true)
     List<Leave> findLeaveForApprovalBySubordinatesOrderByStartDate(@Param("id") String id);
 
     @Query(value = "SELECT COALESCE(SUM(DATEDIFF(end_date, start_date)), 0) FROM leaves WHERE leaves.user_id = :id AND leave_type = :leave_type AND status = '4' AND YEAR(start_date) = YEAR(CURDATE()) AND YEAR(end_date) = YEAR(CURDATE())", nativeQuery = true)

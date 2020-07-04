@@ -3,7 +3,6 @@ package com.team2.laps.service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -34,14 +33,14 @@ public class LeaveService {
     UserService userService;
 
     @Transactional
-    public List<Leave> getLeaveByUser(boolean isManager) {
+    public ApiResponse getLeaveByUser(boolean isManager) {
         User user = userService.getCurrentUser();
         // Manager return subordinates leave record for approval
         if (isManager)
-            return leaveRepository.findLeaveForApprovalBySubordinatesOrderByStartDate(user.getId());
+            return new ApiResponse(leaveRepository.findLeaveForApprovalBySubordinatesOrderByStartDate(user.getId()));
         // Staff return his/her current year record
         else
-            return leaveRepository.findCurrentYearLeaveByUserOrderByStartDate(user.getId());
+            return new ApiResponse(leaveRepository.findCurrentYearLeaveByUserOrderByStartDate(user.getId()));
     }
 
     @Transactional
@@ -65,7 +64,7 @@ public class LeaveService {
                             user.setMedicalLeaveLeft(oldLeave.getUser().getMedicalLeaveLeft() - period.getDays());
                         }
                     } else {
-                        return new ApiResponse(false, "not enough leave left");
+                        return new ApiResponse(false, "Not enough leave left");
                     }
                     leave.setUser(user);
                 }

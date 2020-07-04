@@ -5,7 +5,6 @@ import javax.validation.Valid;
 
 import com.team2.laps.model.Leave;
 import com.team2.laps.model.LeaveStatus;
-import com.team2.laps.payload.ApiResponse;
 import com.team2.laps.service.LeaveService;
 import com.team2.laps.service.UserService;
 
@@ -34,7 +33,7 @@ public class LeaveController {
     public ResponseEntity<?> getLeaveByUser(Authentication authentication) {
         boolean isManager = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"));
-        return ResponseEntity.ok(new ApiResponse(leaveService.getLeaveByUser(isManager)));
+        return ResponseEntity.ok(leaveService.getLeaveByUser(isManager));
     }
 
     @PostMapping

@@ -129,7 +129,7 @@ function initDataTable() {
 		responsive: {
 			details: {
 				type: "column",
-				target: "tr",
+				target: 0,
 			},
 		},
 		columnDefs: [
@@ -142,6 +142,10 @@ function initDataTable() {
 				className: "align-middle",
 			},
 		],
+		fixedHeader: true,
+		select: {
+			style: "single",
+		},
 	});
 	return dataTable;
 }
