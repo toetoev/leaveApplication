@@ -76,7 +76,7 @@ public class LeaveService {
     public ApiResponse deleteOrCancelLeave(String leaveId, LeaveStatus leaveStatus, boolean isManager) {
         if (leaveRepository.findById(leaveId).isPresent()) {
             Leave leave = leaveRepository.findById(leaveId).get();
-            if (isValidStatusChange(leave, isManager)) {
+            if (isValidStatusChange(leave, isManager) == "valid status change") {
                 leave.setStatus(leaveStatus);
                 if (leaveRepository.save(leave) != null)
                     return new ApiResponse(true, "Leave status changed");
@@ -96,8 +96,9 @@ public class LeaveService {
             return "invalid date";
         }
         // Validate status change
-        if (!isValidStatusChange(leave, isManager))
-            return "invalid status change";
+        String isValidStatusChange = isValidStatusChange(leave, isManager);
+        if (isValidStatusChange != "valid status change")
+            return isValidStatusChange;
         // Validate rejected reason
         if (leave.getStatus() == LeaveStatus.REJECTED && leave.getRejectReason() == null)
             return "need rejected reason";
@@ -105,20 +106,20 @@ public class LeaveService {
     }
 
     @Transactional
-    public boolean isValidStatusChange(Leave leave, boolean isManager) {
+    public String isValidStatusChange(Leave leave, boolean isManager) {
         // Validate status change
         LeaveStatus leaveStatus = leave.getStatus();
         if (leave.getId() == null && leaveStatus == LeaveStatus.APPLIED) {
             if (enoughLeaveLeft(leave))
-                return true;
+                return "valid status change";
             else
-                return false;
+                return "Not enough leave left";
         }
         if (leave.getId() != null && leaveRepository.findById(leave.getId()).isPresent()) {
             boolean isStatusChangeValid = false;
             Leave oldLeave = leaveRepository.findById(leave.getId()).get();
             if (oldLeave.getStatus() == leaveStatus)
-                return true;
+                return "valid status change";
             if (isManager) {
                 if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
                         && (leaveStatus == LeaveStatus.APPROVED || leaveStatus == LeaveStatus.REJECTED))
@@ -145,9 +146,12 @@ public class LeaveService {
                 else
                     isStatusChangeValid = false;
             }
-            return isStatusChangeValid;
+            if (isStatusChangeValid)
+                return "valid status change";
+            else
+                return "Invalid status change";
         } else
-            return false;
+            return "Invalid status change";
     }
 
     public long calculateAnnualLeaveDuration(LocalDate startDate, LocalDate endDate) {
