@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{dashboard/layout}">
 	<head>
-		<title>Manager- Review Leave</title>
+		<title>Manager- Review Leaves</title>
 	</head>
 
 	<body>
 		<ul layout:fragment="menu" class="nav flex-column">
 			<li class="nav-item">
-				<a class="nav-link active" th:href="@{/view/manager/approve}">
+				<a class="nav-link active" th:href="@{/view/manager/review}">
 					<i class="fas fa-clipboard-list mr-1"></i>
-					Review Leave
+					Review Leaves
 				</a>
 			</li>
 		</ul>
@@ -21,7 +21,7 @@
 			<div
 				class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
 			>
-				<h1 class="h2">Leave For Approval</h1>
+				<h1 class="h2">Review Leaves</h1>
 			</div>
 			<table
 				id="leave-table"
@@ -29,7 +29,7 @@
 			></table>
 		</main>
 		<div layout:fragment="script">
-			<script th:src="@{/js/approve.js}"></script>
+			<script th:src="@{/js/review.js}"></script>
 		</div>
 	</body>
 </html>
