@@ -93,7 +93,7 @@ public class LeaveService {
     public String isValid(Leave leave, boolean isManager) {
         // Validate claim date
         if (leave.getStartDate().compareTo(leave.getEndDate()) >= 0) {
-            return "invalid date";
+            return "Invalid date";
         }
         // Validate status change
         String isValidStatusChange = isValidStatusChange(leave, isManager);
@@ -101,7 +101,7 @@ public class LeaveService {
             return isValidStatusChange;
         // Validate rejected reason
         if (leave.getStatus() == LeaveStatus.REJECTED && leave.getRejectReason() == null)
-            return "need rejected reason";
+            return "Need rejected reason";
         return "valid";
     }
 
