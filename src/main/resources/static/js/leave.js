@@ -74,6 +74,11 @@ function delete_action(item_id) {
 					success: function (res) {
 						console.log(res);
 						dataTable.ajax.reload();
+						bootbox.alert(
+							res.success
+								? "Leave Application Deleted"
+								: res.message
+						);
 					},
 				});
 			}
@@ -107,6 +112,11 @@ function cancel_action(item_id) {
 					success: function (res) {
 						console.log(res);
 						dataTable.ajax.reload();
+						bootbox.alert(
+							res.success
+								? "Leave Application Canceled"
+								: res.message
+						);
 					},
 				});
 			}
@@ -237,6 +247,9 @@ $("#saveEdit").click(function (e) {
 			console.log(res);
 			dataTable.ajax.reload();
 			$("#editModal").modal("hide");
+			bootbox.alert(
+				res.success ? "Leave Application Updated" : res.message
+			);
 		},
 	});
 });

@@ -25,7 +25,8 @@ function approve_action(this_el) {
 		success: function (res) {
 			console.log(res);
 			dataTable.ajax.reload();
-			bootbox.alert("Leave Approved");
+			// bootbox.alert("Leave Approved");
+			bootbox.alert(res.success ? "Leave Approved" : res.message);
 		},
 	});
 }
@@ -62,7 +63,8 @@ function reject_action(this_el) {
 				success: function (res) {
 					console.log(res);
 					dataTable.ajax.reload();
-					bootbox.alert("Leave Rejected");
+					// bootbox.alert("Leave Rejected");
+					bootbox.alert(res.success ? "Leave Rejected" : res.message);
 				},
 			});
 		},

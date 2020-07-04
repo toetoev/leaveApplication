@@ -66,6 +66,9 @@ function delete_action(item_id) {
 					success: function (res) {
 						console.log(res);
 						dataTable.ajax.reload();
+						bootbox.alert(
+							res.success ? "Employee Deleted" : res.message
+						);
 					},
 				});
 			}
@@ -195,6 +198,7 @@ $("#saveEdit").click(function (e) {
 			console.log(res);
 			dataTable.ajax.reload();
 			$("#editModal").modal("hide");
+			bootbox.alert(res.success ? "Employee Updated" : res.message);
 		},
 		error: function (res) {
 			console.log(res);

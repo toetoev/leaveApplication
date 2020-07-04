@@ -2,7 +2,7 @@ package com.team2.laps.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 import javax.transaction.Transactional;
 
@@ -50,24 +50,19 @@ public class LeaveService {
             if (leave.getId() != null && leaveRepository.findById(leave.getId()).isPresent()) {
                 Leave oldLeave = leaveRepository.findById(leave.getId()).get();
                 leave.setUser(oldLeave.getUser());
-                if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
-                        && leave.getStatus() == LeaveStatus.APPROVED) {
-                    User user = oldLeave.getUser();
-                    if (enoughLeaveLeft(leave)) {
-                        Period period = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
-                        if (leave.getLeaveType() == LeaveType.ANNUAL) {
-                            logger.error(String.valueOf(oldLeave.getUser().getAnnualLeaveLeft()));
-                            logger.error(String.valueOf(period.getDays()));
-                            user.setAnnualLeaveLeft(oldLeave.getUser().getAnnualLeaveLeft() - period.getDays());
-                        }
-                        if (leave.getLeaveType() == LeaveType.MEDICAL) {
-                            user.setMedicalLeaveLeft(oldLeave.getUser().getMedicalLeaveLeft() - period.getDays());
-                        }
-                    } else {
-                        return new ApiResponse(false, "Not enough leave left");
+                User user = oldLeave.getUser();
+                if (enoughLeaveLeft(leave)) {
+                    long period = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
+                    if (leave.getLeaveType() == LeaveType.ANNUAL) {
+                        user.setAnnualLeaveLeft(oldLeave.getUser().getAnnualLeaveLeft() - period);
                     }
-                    leave.setUser(user);
+                    if (leave.getLeaveType() == LeaveType.MEDICAL) {
+                        user.setMedicalLeaveLeft(oldLeave.getUser().getMedicalLeaveLeft() - period);
+                    }
+                } else {
+                    return new ApiResponse(false, "Not enough leave left");
                 }
+                leave.setUser(user);
             }
             if (leaveRepository.save(leave) != null)
                 return new ApiResponse(true, "Leave created or updated");
@@ -132,13 +127,13 @@ public class LeaveService {
                     isStatusChangeValid = false;
                 if ((oldLeave.getStatus() == LeaveStatus.APPLIED || oldLeave.getStatus() == LeaveStatus.UPDATED)
                         && leaveStatus == LeaveStatus.APPROVED) {
-                    Period period = Period.between(leave.getStartDate(), leave.getEndDate());
+                    long period = ChronoUnit.DAYS.between(leave.getStartDate(), leave.getEndDate());
 
                     if (leave.getLeaveType() == LeaveType.ANNUAL) {
-                        isStatusChangeValid = oldLeave.getUser().getAnnualLeaveLeft() >= period.getDays();
+                        isStatusChangeValid = oldLeave.getUser().getAnnualLeaveLeft() >= period;
                     }
                     if (leave.getLeaveType() == LeaveType.MEDICAL) {
-                        isStatusChangeValid = oldLeave.getUser().getMedicalLeaveLeft() >= period.getDays();
+                        isStatusChangeValid = oldLeave.getUser().getMedicalLeaveLeft() >= period;
                     }
                 }
             } else {
@@ -155,33 +150,38 @@ public class LeaveService {
             return false;
     }
 
-    public Period calculateAnnualLeaveDuration(LocalDate startDate, LocalDate endDate) {
-        int days = Period.between(startDate, endDate).getDays();
-        int result = 0;
+    public long calculateAnnualLeaveDuration(LocalDate startDate, LocalDate endDate) {
+        long days = ChronoUnit.DAYS.between(startDate, endDate);
+        logger.error(startDate.toString());
+        logger.error(endDate.toString());
+        logger.error(String.valueOf(days));
+        long result = 0;
         if (days <= 14) {
             result = (days / 7) * 5;
-            for (int i = 0; i < days % 7; i++) {
+            for (long i = 0; i < days % 7; i++) {
                 if (startDate.plusDays(i).getDayOfWeek() != DayOfWeek.SATURDAY
                         && startDate.plusDays(i).getDayOfWeek() != DayOfWeek.SUNDAY)
                     result++;
             }
-            return Period.ofDays(result);
+            return result;
         } else
-            return Period.ofDays(days);
+            return days;
     }
 
     public boolean enoughLeaveLeft(Leave leave) {
         if (leave.getLeaveType() == LeaveType.ANNUAL) {
-            Period period = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
-            logger.error(String.valueOf(period.getDays()));
+            long period = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
+
+            logger.error(leave.getEndDate().toString());
+            logger.error(String.valueOf(period) + "Period");
             logger.error(String.valueOf(leave.getUser().getAnnualLeaveLeft()));
-            if (period.getDays() > leave.getUser().getAnnualLeaveLeft())
+            if (period > leave.getUser().getAnnualLeaveLeft())
                 return false;
             else
                 return true;
         } else if (leave.getLeaveType() == LeaveType.MEDICAL) {
-            Period period = Period.between(leave.getStartDate(), leave.getEndDate());
-            if (period.getDays() > leave.getUser().getMedicalLeaveLeft())
+            long period = ChronoUnit.DAYS.between(leave.getStartDate(), leave.getEndDate());
+            if (period > leave.getUser().getMedicalLeaveLeft())
                 return false;
             else
                 return true;
