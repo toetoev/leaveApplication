@@ -1,5 +1,6 @@
 package com.team2.laps.exception;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import com.team2.laps.payload.ApiResponse;
@@ -28,9 +29,15 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public final ResponseEntity<Object> handleConstraintViolationException(Exception ex, WebRequest request) {
+    public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
+            WebRequest request) {
         // log.error(ex.getDefaultMessage());
-        ApiResponse apiResponse = ApiResponse.builder().success(false).message(ex.getMessage()).build();
+        String message = "";
+        for (ConstraintViolation violation : ex.getConstraintViolations()) {
+            message += violation.getMessage() + ", ";
+        }
+        message = message.substring(0, message.length() - 2);
+        ApiResponse apiResponse = ApiResponse.builder().success(false).message(message).build();
         return ResponseEntity.ok(apiResponse);
     }
 }
