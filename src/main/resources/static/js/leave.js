@@ -72,7 +72,6 @@ function delete_action(item_id) {
 					},
 					contentType: "application/json",
 					success: function (res) {
-						console.log(res);
 						dataTable.ajax.reload();
 						bootbox.alert(
 							res.success
@@ -110,7 +109,6 @@ function cancel_action(item_id) {
 					},
 					contentType: "application/json",
 					success: function (res) {
-						console.log(res);
 						dataTable.ajax.reload();
 						bootbox.alert(
 							res.success
@@ -244,7 +242,6 @@ $("#saveEdit").click(function (e) {
 			status: "UPDATED",
 		}),
 		success: function (res) {
-			console.log(res);
 			dataTable.ajax.reload();
 			$("#editModal").modal("hide");
 			bootbox.alert(

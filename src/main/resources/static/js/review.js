@@ -23,9 +23,7 @@ function approve_action(this_el) {
 			status: "APPROVED",
 		}),
 		success: function (res) {
-			console.log(res);
 			dataTable.ajax.reload();
-			// bootbox.alert("Leave Approved");
 			bootbox.alert(res.success ? "Leave Approved" : res.message);
 		},
 	});
@@ -36,7 +34,6 @@ function reject_action(this_el) {
 		title: "Please write the reason for rejection.",
 		centerVertical: true,
 		callback: function (result) {
-			console.log(result);
 			var tr_el = this_el.closest("tr");
 			var row = dataTable.row(tr_el);
 			var row_data = row.data();
@@ -61,9 +58,7 @@ function reject_action(this_el) {
 					rejectReason: result,
 				}),
 				success: function (res) {
-					console.log(res);
 					dataTable.ajax.reload();
-					// bootbox.alert("Leave Rejected");
 					bootbox.alert(res.success ? "Leave Rejected" : res.message);
 				},
 			});
@@ -79,9 +74,6 @@ function initDataTable() {
 				Authorization: "Bearer " + localStorage.getItem("accessToken"),
 			},
 			contentType: "application/json",
-			// success: (res) => {
-			// 	console.log(res);
-			// },
 		},
 		columns: [
 			{

@@ -15,7 +15,6 @@ $("#submitSignUp").click(function (e) {
 			role: $("#role").val(),
 		}),
 		success: function (res) {
-			console.log(res);
 			bootbox.alert(res.success ? "Signed Up Successfully" : res.message);
 		},
 	});

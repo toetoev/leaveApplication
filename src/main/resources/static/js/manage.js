@@ -64,7 +64,6 @@ function delete_action(item_id) {
 					},
 					contentType: "application/json",
 					success: function (res) {
-						console.log(res);
 						dataTable.ajax.reload();
 						bootbox.alert(
 							res.success ? "Employee Deleted" : res.message
@@ -183,7 +182,6 @@ $("#saveEdit").click(function (e) {
 			roles: [{ name: $("#role").val() }],
 		});
 	}
-	console.log(data);
 
 	$.ajax({
 		type: "PUT",
@@ -195,13 +193,9 @@ $("#saveEdit").click(function (e) {
 		},
 		data: data,
 		success: function (res) {
-			console.log(res);
 			dataTable.ajax.reload();
 			$("#editModal").modal("hide");
 			bootbox.alert(res.success ? "Employee Updated" : res.message);
-		},
-		error: function (res) {
-			console.log(res);
 		},
 	});
 });

@@ -65,7 +65,6 @@ $("#submitLeave").click(function (e) {
 			status: "APPLIED",
 		}),
 		success: function (res) {
-			console.log(res);
 			bootbox.alert(
 				res.success ? "Leave Application Submitted" : res.message
 			);

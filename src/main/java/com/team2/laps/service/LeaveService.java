@@ -14,15 +14,11 @@ import com.team2.laps.payload.ApiResponse;
 import com.team2.laps.repository.LeaveRepository;
 import com.team2.laps.repository.UserRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LeaveService {
-    private static final Logger logger = LoggerFactory.getLogger(LeaveService.class);
-
     @Autowired
     LeaveRepository leaveRepository;
 
@@ -156,9 +152,6 @@ public class LeaveService {
 
     public long calculateAnnualLeaveDuration(LocalDate startDate, LocalDate endDate) {
         long days = ChronoUnit.DAYS.between(startDate, endDate);
-        logger.error(startDate.toString());
-        logger.error(endDate.toString());
-        logger.error(String.valueOf(days));
         long result = 0;
         if (days <= 14) {
             result = (days / 7) * 5;
@@ -175,10 +168,6 @@ public class LeaveService {
     public boolean enoughLeaveLeft(Leave leave) {
         if (leave.getLeaveType() == LeaveType.ANNUAL) {
             long period = calculateAnnualLeaveDuration(leave.getStartDate(), leave.getEndDate());
-
-            logger.error(leave.getEndDate().toString());
-            logger.error(String.valueOf(period) + "Period");
-            logger.error(String.valueOf(leave.getUser().getAnnualLeaveLeft()));
             if (period > leave.getUser().getAnnualLeaveLeft())
                 return false;
             else
