@@ -24,8 +24,6 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.team2.laps.validation.UniqueEmail;
-import com.team2.laps.validation.UniqueName;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -52,13 +50,11 @@ public class User {
 
     @Size(max = 40)
     @NotBlank
-    @UniqueName
     private String name;
 
     @Size(max = 40)
     @NotBlank
     @Email
-    @UniqueEmail
     private String email;
 
     @Size(max = 100)

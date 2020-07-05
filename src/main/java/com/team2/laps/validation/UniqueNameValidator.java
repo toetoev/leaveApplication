@@ -14,7 +14,9 @@ public class UniqueNameValidator implements ConstraintValidator<UniqueName, Stri
     private UserRepository userRepository;
 
     @Override
-    public boolean isValid(String nameOrEmail, ConstraintValidatorContext context) {
-        return !userRepository.existsByName(nameOrEmail);
+    public boolean isValid(String name, ConstraintValidatorContext context) {
+        if (userRepository.existsByName(name))
+            return false;
+        return true;
     }
 }
