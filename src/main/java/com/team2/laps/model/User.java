@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.team2.laps.validation.AnnualLeave;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -42,6 +43,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "leaves" })
+@AnnualLeave
 public class User {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -49,15 +51,15 @@ public class User {
     private String id;
 
     @Size(max = 40)
-    @NotBlank
+    @NotBlank(message = "Name should not be blank.")
     private String name;
 
     @Size(max = 40)
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email should not be blank.")
+    @Email(message = "Email format is wrong.")
     private String email;
 
-    @Size(max = 100)
+    @Size(max = 100, message = "Password max length should be lower than 100")
     @JsonIgnore
     private String password;
 

@@ -62,6 +62,6 @@ public class ClaimDateValidator implements ConstraintValidator<ClaimDate, Leave>
             else
                 return true;
         } else
-            return false;
+            return true;
     }
 }

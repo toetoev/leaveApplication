@@ -40,7 +40,7 @@ public class Leave {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Null(groups = OnCreate.class)
+    @Null(groups = OnCreate.class, message = "Id cannot be specified when create leave")
     @LeaveIDExisting(groups = OnUpdate.class)
     private String id;
 
@@ -57,7 +57,7 @@ public class Leave {
     @JsonFormat(pattern = "MM/dd/yyyy")
     private LocalDate endDate;
 
-    @NotBlank(message = "{NotBlank.reason}")
+    @NotBlank(message = "Leave apply reason cannot be empty")
     private String reason;
 
     private String workDissemination;

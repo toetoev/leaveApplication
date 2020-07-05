@@ -14,19 +14,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignUpRequest {
-    @NotBlank
+    @NotBlank(message = "Name cannot be blank")
     @Size(max = 15)
     @UniqueName
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Email cannot be blank")
     @Size(max = 40)
     @Email
     @UniqueEmail
     private String email;
 
-    @NotBlank
-    @Size(min = 6, max = 20)
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 6, max = 20, message = "Password should have 6-20 characters")
     private String password;
 
     private RoleName role;
