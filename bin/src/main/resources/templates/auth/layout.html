@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+	</head>
+
+	<body>
+		<div class="container">
+			<main layout:fragment="main"></main>
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<div layout:fragment="script"></div>
+	</body>
+</html>

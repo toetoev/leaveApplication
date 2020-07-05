@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{dashboard/layout}">
+	<head>
+		<title>Admin - Register</title>
+	</head>
+
+	<body>
+		<ul layout:fragment="menu" class="nav flex-column">
+			<li class="nav-item">
+				<a class="nav-link active" th:href="@{/view/admin/register}">
+					<i class="fas fa-user-plus mr-1"></i>
+					Register
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/view/admin/manage}">
+					<i class="far fa-address-book mr-2"></i>
+					Manage Employees
+				</a>
+			</li>
+		</ul>
+		<main
+			layout:fragment="main"
+			role="main"
+			class="col-md-9 ml-sm-auto col-lg-10 px-md-4"
+		>
+			<div
+				class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+			>
+				<h1 class="h2">Register</h1>
+			</div>
+			<div class="col-md-8 order-md-1">
+				<form>
+					<!-- Name -->
+					<div class="mb-3">
+						<label for="name">Name</label>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								id="name"
+								placeholder="Full name"
+							/>
+						</div>
+					</div>
+					<!-- Email -->
+					<div class="mb-3">
+						<label for="email">Email</label>
+						<div class="input-group">
+							<input
+								type="email"
+								class="form-control"
+								id="email"
+								placeholder="Email will be used for login"
+							/>
+						</div>
+					</div>
+					<!-- Password -->
+					<div class="mb-3">
+						<label for="password">Password</label>
+						<div class="input-group">
+							<input
+								type="password"
+								class="form-control"
+								id="password"
+								placeholder="Minimum 6 characters"
+							/>
+						</div>
+					</div>
+					<!-- Role Type -->
+					<div class="mb-3">
+						<label for="role">Role</label>
+						<select
+							class="custom-select d-block w-100"
+							id="role"
+							required
+						>
+							<option value="" disabled selected
+								>Select role</option
+							>
+							<option value="ROLE_MANAGER">Manager</option>
+							<option value="ROLE_ADMINISTRATIVE_STAFF"
+								>Administrative Staff</option
+							>
+							<option value="ROLE_PROFESSIONAL_STAFF"
+								>Professional Staff</option
+							>
+						</select>
+					</div>
+					<button
+						class="btn btn-primary btn-lg btn-block"
+						id="submitSignUp"
+					>
+						Register
+					</button>
+				</form>
+			</div>
+		</main>
+
+		<div layout:fragment="script">
+			<script th:src="@{/js/signup.js}"></script>
+		</div>
+	</body>
+</html>

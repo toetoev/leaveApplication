@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{dashboard/layout}">
+	<head>
+		<title>Staff - Submit Application</title>
+	</head>
+
+	<body>
+		<ul layout:fragment="menu" class="nav flex-column">
+			<li class="nav-item">
+				<a class="nav-link active" th:href="@{/view/staff/submit}">
+					<i class="fas fa-clipboard-list mr-1"></i>
+					Submit Application
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/view/staff/leave}">
+					<i class="fas fa-address-book mr-1"></i>
+					Leave History
+				</a>
+			</li>
+		</ul>
+		<main
+			layout:fragment="main"
+			role="main"
+			class="col-md-9 ml-sm-auto col-lg-10 px-md-4"
+		>
+			<div
+				class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+			>
+				<h1 class="h2">Submit Leave Application</h1>
+			</div>
+			<div class="col-md-8 order-md-1">
+				<form>
+					<!-- Leave Period -->
+					<div class="row">
+						<div class="col-md-6">
+							<label for="startDate">Start Date</label>
+							<div class="form-group">
+								<div
+									class="input-group date"
+									id="startDatetimepicker"
+									data-target-input="nearest"
+								>
+									<input
+										type="text"
+										class="form-control datetimepicker-input"
+										data-target="#startDatetimepicker"
+									/>
+									<div
+										class="input-group-append"
+										data-target="#startDatetimepicker"
+										data-toggle="datetimepicker"
+									>
+										<div class="input-group-text">
+											<i class="fa fa-calendar"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label for="endDate">End Date</label>
+							<div class="form-group">
+								<div
+									class="input-group date"
+									id="endDatetimepicker"
+									data-target-input="nearest"
+								>
+									<input
+										type="text"
+										class="form-control datetimepicker-input"
+										data-target="#endDatetimepicker"
+									/>
+									<div
+										class="input-group-append"
+										data-target="#endDatetimepicker"
+										data-toggle="datetimepicker"
+									>
+										<div class="input-group-text">
+											<i class="fa fa-calendar"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Category of leave -->
+					<div class="mb-3">
+						<label for="leave-type">Leave Type</label>
+						<select
+							class="custom-select d-block w-100"
+							id="leave-type"
+							required
+						>
+							<option value="" disabled selected
+								>Select leave type</option
+							>
+							<option value="ANNUAL">Annual</option>
+							<option value="MEDICAL">Medical</option>
+						</select>
+					</div>
+					<!-- Reason -->
+					<div class="mb-3">
+						<label for="reason">Reason</label>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								id="reason"
+								required
+								placeholder="Reason for leave application (Maximum 100 characters)"
+							/>
+						</div>
+					</div>
+					<!-- Work Dissemination -->
+					<div class="mb-4">
+						<label for="work-dissemination"
+							>Work Dissemination</label
+						>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								id="work-dissemination"
+								placeholder="Work dissemination (Optional)"
+							/>
+						</div>
+					</div>
+					<!-- Contact Details -->
+					<div class="mb-4">
+						<label for="contact-details">Contact Details</label>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								id="contact-details"
+								placeholder="Please provide contact details if on an overseas trip (Optional)"
+							/>
+						</div>
+					</div>
+					<button
+						class="btn btn-primary btn-lg btn-block"
+						id="submitLeave"
+					>
+						Submit Application
+					</button>
+				</form>
+			</div>
+		</main>
+
+		<div layout:fragment="script">
+			<script th:src="@{/js/submit.js}"></script>
+		</div>
+	</body>
+</html>

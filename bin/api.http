@@ -1,0 +1,36 @@
+POST http://localhost:5000/api/auth/signup
+Content-Type: application/json
+
+{
+    "name": "Martini Reinherz",
+    "username": "Martini",
+    "email": "zhao435021640@gmail.com",
+    "password": "123456",
+    "role": "ROLE_MANAGER"
+}
+
+###
+POST http://localhost:5000/api/auth/signin
+Content-Type: application/json
+
+{
+    "usernameOrEmail": "Martini",
+    "password": "123456"
+}
+
+###
+GET http://localhost:5000/api/leaves
+Content-Type: 'application/json',
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTkzMjQzNDIwLCJleHAiOjE1OTM4NDgyMjB9.TShYngLXoZdXbtpE-bCYuzdFWgXFXWhbXuADMoaAt96EEu3y29GPQMFcAVPQCjsSXbWC4ZlhshKEJxe1XgZjlQ
+
+###
+POST http://localhost:5000/api/leaves
+Content-Type: 'application/json',
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTkzMTY0MTY5LCJleHAiOjE1OTM3Njg5Njl9.AaRBtZRAWjylHEFRTlxmV7UcMZ95ZJlH0MSYLJtgmmNN-7DUTLKHr3Z-vp6inUaw0YJI_eyNO_JpPPe4CFj02g,
+
+{
+    "leaveType": "ANNUAL",
+    "startDate": "2020-06-26",
+    "endDate": "2020-06-27",
+    "status": "APPLIED"
+}

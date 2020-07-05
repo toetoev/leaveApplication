@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+		<link rel="stylesheet" th:href="@{/css/datatables.min.css}" />
+		<link
+			rel="stylesheet"
+			th:href="@{https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css}"
+		/>
+		<link rel="stylesheet" th:href="@{/css/dashboard.css}" />
+	</head>
+
+	<body>
+		<nav
+			layout:fragment="navbar"
+			class="navbar navbar-dark sticky-top bg-lightblue flex-md-nowrap p-0 shadow"
+		>
+			<a
+				class="navbar-brand brand bg-lightblue col-md-3 col-lg-2 mr-0 px-3"
+				href="#"
+				id="username"
+				>Hello</a
+			>
+			<ul class="navbar-nav px-3">
+				<li class="nav-item text-nowrap">
+					<a class="nav-link text-white" href="#" id="signOut"
+						>Sign out</a
+					>
+				</li>
+			</ul>
+		</nav>
+		<div class="container-fluid">
+			<div class="row">
+				<nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+					<div class="sidebar-sticky pt-3">
+						<section layout:fragment="menu"></section>
+					</div>
+				</nav>
+
+				<main layout:fragment="main"></main>
+			</div>
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/datatables.min.js}"></script>
+		<script
+			th:src="@{//cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js}"
+		></script>
+		<script
+			th:src="@{//cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js}"
+		></script>
+		<script
+			th:src="@{https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js}"
+		></script>
+		<script defer th:src="@{/js/all.min.js}"></script>
+		<script
+			th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js}"
+		></script>
+		<script th:src="@{/js/dashboard.js}"></script>
+		<div layout:fragment="script"></div>
+	</body>
+</html>

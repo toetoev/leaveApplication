@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{auth/layout}">
+	<head>
+		<title>Auth</title>
+		<link rel="stylesheet" th:href="@{/css/auth.css}" />
+	</head>
+
+	<body class="text-center">
+		<div layout:fragment="main">
+			<form class="form-signin" id="formSignIn">
+				<img class="" th:src="@{/img/logo.png}" alt="" height="80" />
+				<h1 class="h3 mb-3 font-weight-normal text-center">
+					Please sign in
+				</h1>
+				<input
+					type="text"
+					name="nameOrEmail"
+					class="form-control"
+					placeholder="Username / Email"
+					required
+					autofocus
+				/>
+				<input
+					type="password"
+					name="password"
+					class="form-control"
+					placeholder="Password"
+					required
+				/>
+				<button class="btn btn-lg btn-primary btn-block" type="submit">
+					Sign in
+				</button>
+			</form>
+		</div>
+		<div layout:fragment="script">
+			<script th:src="@{/js/auth.js}"></script>
+		</div>
+	</body>
+</html>
