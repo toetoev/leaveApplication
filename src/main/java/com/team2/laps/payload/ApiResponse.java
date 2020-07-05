@@ -1,25 +1,12 @@
 package com.team2.laps.payload;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@ToString
+@Data
+@Builder
 public class ApiResponse {
     private Boolean success;
     private String message;
     private Object data;
-
-    public ApiResponse(Boolean success, String message) {
-        this.success = success;
-        this.message = message;
-    }
-
-    public ApiResponse(Object data) {
-        this.data = data;
-    }
 }

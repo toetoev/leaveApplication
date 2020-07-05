@@ -67,10 +67,10 @@ public class UserService {
 	@Transactional
 	public ApiResponse registerUser(SignUpRequest signUpRequest) {
 		if (userRepository.existsByName(signUpRequest.getName())) {
-			return new ApiResponse(false, "Username is already taken!");
+			return ApiResponse.builder().success(false).message("Username is already taken!").build();
 		}
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-			return new ApiResponse(false, "Email Address already in use!");
+			return ApiResponse.builder().success(false).message("Email Address already in use!").build();
 		}
 		User user = new User(signUpRequest.getName(), signUpRequest.getEmail(), signUpRequest.getPassword());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -87,9 +87,9 @@ public class UserService {
 			user.setMedicalLeaveLeft(medicalLeaveMax);
 		}
 		if (userRepository.save(user) != null)
-			return new ApiResponse(true, "User registered successfully");
+			return ApiResponse.builder().success(true).message("User registered successfully").build();
 		else
-			return new ApiResponse(false, "User registration failed");
+			return ApiResponse.builder().success(false).message("User registration failed").build();
 	}
 
 	@Transactional
@@ -159,26 +159,30 @@ public class UserService {
 			user.setId(id);
 			user.setPassword(oldUser.getPassword());
 			if (userRepository.save(user) != null)
-				return new ApiResponse(true, "User updated successfully");
+				return ApiResponse.builder().success(true).message("User updated successfully").build();
 			else
-				return new ApiResponse(false, "User update failed");
+				return ApiResponse.builder().success(false).message("User update failed").build();
 		} else
-			return new ApiResponse(false, "Cannot find user to be updated");
+			return ApiResponse.builder().success(false).message("Cannot find user to be updated").build();
 	}
 
 	@Transactional
 	public ApiResponse getAll(RoleName role) {
 		// Get all manager
 		if (role == RoleName.ROLE_MANAGER) {
-			return new ApiResponse(userRepository.findAll().stream()
-					.filter(x -> x.getRoles().iterator().next().getName() == RoleName.ROLE_MANAGER)
-					.collect(Collectors.toList()));
+			return ApiResponse.builder()
+					.data(userRepository.findAll().stream()
+							.filter(x -> x.getRoles().iterator().next().getName() == RoleName.ROLE_MANAGER)
+							.collect(Collectors.toList()))
+					.build();
 		}
 		// Default action get all except admin
 		else {
-			return new ApiResponse(userRepository.findAll().stream()
-					.filter(x -> x.getRoles().iterator().next().getName() != RoleName.ROLE_ADMIN)
-					.collect(Collectors.toList()));
+			return ApiResponse.builder()
+					.data(userRepository.findAll().stream()
+							.filter(x -> x.getRoles().iterator().next().getName() != RoleName.ROLE_ADMIN)
+							.collect(Collectors.toList()))
+					.build();
 		}
 	}
 }

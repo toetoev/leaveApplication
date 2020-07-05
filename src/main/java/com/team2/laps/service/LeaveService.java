@@ -33,10 +33,12 @@ public class LeaveService {
         User user = userService.getCurrentUser();
         // Manager return subordinates leave record for approval
         if (isManager)
-            return new ApiResponse(leaveRepository.findLeaveForApprovalBySubordinatesOrderByStartDate(user.getId()));
+            return ApiResponse.builder()
+                    .data(leaveRepository.findLeaveForApprovalBySubordinatesOrderByStartDate(user.getId())).build();
         // Staff return his/her current year record
         else
-            return new ApiResponse(leaveRepository.findCurrentYearLeaveByUserOrderByStartDate(user.getId()));
+            return ApiResponse.builder().data(leaveRepository.findCurrentYearLeaveByUserOrderByStartDate(user.getId()))
+                    .build();
     }
 
     @Transactional
@@ -56,16 +58,16 @@ public class LeaveService {
                         user.setMedicalLeaveLeft(oldLeave.getUser().getMedicalLeaveLeft() - period);
                     }
                 } else {
-                    return new ApiResponse(false, "Not enough leave left");
+                    return ApiResponse.builder().success(false).message("Not enough leave left").build();
                 }
                 leave.setUser(user);
             }
             if (leaveRepository.save(leave) != null)
-                return new ApiResponse(true, "Leave created or updated");
+                return ApiResponse.builder().success(true).message("Leave created or updated").build();
             else
-                return new ApiResponse(false, "Leave create or update failed");
+                return ApiResponse.builder().success(false).message("Leave create or update failed").build();
         }
-        return new ApiResponse(false, isValid);
+        return ApiResponse.builder().success(false).message(isValid).build();
     }
 
     @Transactional
@@ -75,14 +77,14 @@ public class LeaveService {
             if (isValidStatusChange(leave, isManager) == "valid status change") {
                 leave.setStatus(leaveStatus);
                 if (leaveRepository.save(leave) != null)
-                    return new ApiResponse(true, "Leave status changed");
+                    return ApiResponse.builder().success(true).message("Leave status changed").build();
                 else
-                    return new ApiResponse(false, "Leave status change failed");
+                    return ApiResponse.builder().success(false).message("Leave status change failed").build();
             } else {
-                return new ApiResponse(false, "Invalid status change");
+                return ApiResponse.builder().success(false).message("Invalid status change").build();
             }
         } else
-            return new ApiResponse(false, "Cannot find leave to be deleted");
+            return ApiResponse.builder().success(false).message("Cannot find leave to be deleted").build();
     }
 
     @Transactional
