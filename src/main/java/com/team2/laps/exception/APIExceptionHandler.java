@@ -28,10 +28,8 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
-            WebRequest request) {
-        // log.error(ex.getDefaultMessage());
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
         String message = "";
         for (ConstraintViolation violation : ex.getConstraintViolations()) {
             message += violation.getMessage() + ", ";

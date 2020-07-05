@@ -108,7 +108,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public ApiResponse updateUser(@Valid @UserIDExisting String id, @Valid User user) {
+	@Validated
+	public ApiResponse updateUser(@UserIDExisting String id, @Valid User user) {
 		if (id != null || userRepository.findById(id).isPresent()) {
 			User oldUser = userRepository.findById(id).get();
 			// Report To

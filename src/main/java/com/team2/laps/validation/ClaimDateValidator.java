@@ -15,9 +15,6 @@ import com.team2.laps.repository.LeaveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Component
 public class ClaimDateValidator implements ConstraintValidator<ClaimDate, Leave> {
     @Autowired

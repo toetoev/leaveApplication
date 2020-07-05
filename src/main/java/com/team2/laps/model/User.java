@@ -43,7 +43,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "leaves" })
-@AnnualLeave
+@AnnualLeave(message = "Annual leave entitled cannot be lower than leave used the year")
 public class User {
     @Id
     @GeneratedValue(generator = "uuid")
