@@ -1,7 +1,6 @@
 package com.team2.laps.controller;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 
 import com.team2.laps.model.RoleName;
 import com.team2.laps.model.User;
@@ -27,13 +26,13 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 		return ResponseEntity.ok(userService.signInUser(loginRequest));
 	}
 
 	@PostMapping("/signup")
 	@RolesAllowed("ROLE_ADMIN")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+	public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
 		return ResponseEntity.ok(userService.registerUser(signUpRequest));
 	}
 

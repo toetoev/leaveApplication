@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ControllerAdvice
 public class APIExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
@@ -26,6 +29,7 @@ public class APIExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public final ResponseEntity<Object> handleConstraintViolationException(Exception ex, WebRequest request) {
+        // log.error(ex.getDefaultMessage());
         ApiResponse apiResponse = ApiResponse.builder().success(false).message(ex.getMessage()).build();
         return ResponseEntity.ok(apiResponse);
     }

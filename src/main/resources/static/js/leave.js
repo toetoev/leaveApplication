@@ -220,7 +220,7 @@ $(document).ready(function () {
 $("#saveEdit").click(function (e) {
 	e.preventDefault();
 	$.ajax({
-		type: "POST",
+		type: "PUT",
 		contentType: "application/json; charset=utf-8",
 		dataType: "json",
 		url: "/api/leaves",

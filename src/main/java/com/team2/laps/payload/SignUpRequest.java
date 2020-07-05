@@ -5,6 +5,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.team2.laps.model.RoleName;
+import com.team2.laps.validation.UniqueEmail;
+import com.team2.laps.validation.UniqueName;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,11 +16,13 @@ import lombok.Setter;
 public class SignUpRequest {
     @NotBlank
     @Size(max = 15)
+    @UniqueName
     private String name;
 
     @NotBlank
     @Size(max = 40)
     @Email
+    @UniqueEmail
     private String email;
 
     @NotBlank

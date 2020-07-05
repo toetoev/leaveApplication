@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import com.team2.laps.exception.AppException;
 import com.team2.laps.model.LeaveType;
@@ -19,6 +20,7 @@ import com.team2.laps.repository.LeaveRepository;
 import com.team2.laps.repository.RoleRepository;
 import com.team2.laps.repository.UserRepository;
 import com.team2.laps.security.JwtTokenProvider;
+import com.team2.laps.validation.UserIDExisting;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +30,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 public class UserService {
 	@Autowired
 	LeaveRepository leaveRepository;
@@ -65,13 +69,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public ApiResponse registerUser(SignUpRequest signUpRequest) {
-		if (userRepository.existsByName(signUpRequest.getName())) {
-			return ApiResponse.builder().success(false).message("Username is already taken!").build();
-		}
-		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-			return ApiResponse.builder().success(false).message("Email Address already in use!").build();
-		}
+	@Validated
+	public ApiResponse registerUser(@Valid SignUpRequest signUpRequest) {
 		User user = new User(signUpRequest.getName(), signUpRequest.getEmail(), signUpRequest.getPassword());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		Role userRole = roleRepository.findByName(signUpRequest.getRole())
@@ -93,7 +92,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public JwtAuthenticationResponse signInUser(LoginRequest loginRequest) {
+	public JwtAuthenticationResponse signInUser(@Valid LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getNameOrEmail(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -104,13 +103,12 @@ public class UserService {
 	}
 
 	@Transactional
-	public void deleteUser(String id) {
-		if (id != null || userRepository.findById(id).isPresent())
-			userRepository.deleteById(id);
+	public void deleteUser(@Valid @UserIDExisting String id) {
+		userRepository.deleteById(id);
 	}
 
 	@Transactional
-	public ApiResponse updateUser(String id, User user) {
+	public ApiResponse updateUser(@Valid @UserIDExisting String id, @Valid User user) {
 		if (id != null || userRepository.findById(id).isPresent()) {
 			User oldUser = userRepository.findById(id).get();
 			// Report To
@@ -126,7 +124,6 @@ public class UserService {
 					user.setReportTo(null);
 					user.setAnnualLeaveEntitled(0);
 					user.setAnnualLeaveLeft(0);
-					user.setCompensationLeft(0);
 					user.setMedicalLeaveLeft(0);
 				}
 				// -> Staff, initialize with default leave

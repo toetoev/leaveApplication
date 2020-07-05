@@ -5,7 +5,7 @@ function approve_action(this_el) {
 	var row = dataTable.row(tr_el);
 	var row_data = row.data();
 	$.ajax({
-		type: "POST",
+		type: "PUT",
 		contentType: "application/json",
 		dataType: "json",
 		url: "/api/leaves",
@@ -38,7 +38,7 @@ function reject_action(this_el) {
 			var row = dataTable.row(tr_el);
 			var row_data = row.data();
 			$.ajax({
-				type: "POST",
+				type: "PUT",
 				contentType: "application/json",
 				dataType: "json",
 				url: "/api/leaves",

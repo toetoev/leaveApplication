@@ -24,10 +24,13 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.team2.laps.validation.UniqueEmail;
+import com.team2.laps.validation.UniqueName;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,6 +42,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "leaves" })
 public class User {
     @Id
@@ -48,11 +52,13 @@ public class User {
 
     @Size(max = 40)
     @NotBlank
+    @UniqueName
     private String name;
 
     @Size(max = 40)
     @NotBlank
     @Email
+    @UniqueEmail
     private String email;
 
     @Size(max = 100)
@@ -61,7 +67,6 @@ public class User {
 
     private long annualLeaveEntitled;
     private long annualLeaveLeft;
-    private long compensationLeft;
 
     @Max(60)
     private long medicalLeaveLeft;

@@ -10,8 +10,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.team2.laps.validation.ClaimDate;
+import com.team2.laps.validation.LeaveIDExisting;
+import com.team2.laps.validation.OnCreate;
+import com.team2.laps.validation.OnUpdate;
+import com.team2.laps.validation.RejectReason;
+import com.team2.laps.validation.StatusChange;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -26,10 +33,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@ClaimDate(groups = { OnUpdate.class, OnCreate.class })
+@RejectReason(groups = OnUpdate.class)
+@StatusChange(groups = { OnUpdate.class, OnCreate.class })
 public class Leave {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Null(groups = OnCreate.class)
+    @LeaveIDExisting(groups = OnUpdate.class)
     private String id;
 
     @ManyToOne
@@ -45,7 +57,7 @@ public class Leave {
     @JsonFormat(pattern = "MM/dd/yyyy")
     private LocalDate endDate;
 
-    @NotBlank
+    @NotBlank(message = "{NotBlank.reason}")
     private String reason;
 
     private String workDissemination;
