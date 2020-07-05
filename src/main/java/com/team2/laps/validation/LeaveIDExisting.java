@@ -14,7 +14,7 @@ import javax.validation.Payload;
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Constraint(validatedBy = LeaveIDExistingValidator.class)
 public @interface LeaveIDExisting {
-    String message() default "{ProductIDExisting}";
+    String message() default "{LeaveIDExisting}";
 
     Class<?>[] groups() default {};
 
